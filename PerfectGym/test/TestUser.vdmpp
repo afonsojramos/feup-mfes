@@ -1,0 +1,55 @@
+class TestUser is subclass of Test
+types
+operations
+	
+	--Creates a new member
+	public newMember: () ==> Member
+	newMember() == (
+		return new Member("Cláudia", "Rodrigues", "up201508262@fe.up.pt", <Feminine>, 50, 1.67, "qwerty1234");
+	);
+	
+	--Creates a new professor
+	public newProfessor: () ==> Professor
+	newProfessor() == (
+		return new Professor("Jose", "Luis", "test@test.com", <Masculine>, "qwerty1234");
+	);
+	
+	-- Test 1
+	private memberTest: () ==> ()
+	memberTest() == (
+			
+			dcl user:Member := newMember();
+			assertTrue(user.getName() = "Cláudia Rodrigues"); 
+			assertTrue(user.getEmail() = "up201508262@fe.up.pt");	
+			assertTrue(user.getPassword() = "qwerty1234");
+			assertTrue(user.getGender() = <Feminine>);	
+			assertTrue(user.getNumber() = 1);	
+			
+			assertTrue(user.getWeight() = 50);
+			assertTrue(user.getHeight() = 1.67);	
+	);
+	
+	-- Test 2
+	private professorTest: () ==> ()
+	professorTest() == (
+			
+			dcl user:Professor := newProfessor();
+			assertTrue(user.getName() = "Jose Luis");	
+			assertTrue(user.getEmail() = "test@test.com");	
+			assertTrue(user.getPassword() = "qwerty1234");
+			assertTrue(user.getGender() = <Masculine>);	
+			assertTrue(user.getNumber() = 2);	
+	);
+	 
+	 
+	-- Runs all the tests associated with a user
+	public test: () ==> ()
+	test() == (
+	 
+		 memberTest();
+		 professorTest();
+		 
+	);
+
+ 
+end TestUser

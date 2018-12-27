@@ -1,14 +1,97 @@
 class User
 types
--- TODO Define types here
+	public Gender = <Masculine> | <Feminine>;
 values
--- TODO Define values here
+
 instance variables
--- TODO Define instance variables here
+	
+	-- id (static)
+	public static id : nat1 := 1;
+	
+	-- User's first name
+	protected firstName: seq of char;
+	
+	-- User's last name
+	protected lastName:seq of char;
+	
+	-- User's email
+	protected email:seq of char;
+	
+	-- User's gender
+	protected gender: Gender;
+	
+	--User's number
+	protected membershipNumber : nat1;
+ 
+	--User's mobile
+	protected mobile: [int];
+	
+	--User's password
+	protected password: seq of char;
+	
 operations
--- TODO Define operations here
-functions
--- TODO Define functiones here
-traces
--- TODO Define Combinatorial Test Traces here
+
+	-- Constructor
+	public User : seq of char * seq of char * seq of char * Gender * seq of char  ==> User
+	User (fName, lName, mail, g, pass) == (
+	
+		firstName := fName;
+	  lastName := lName;
+	  email := mail;
+	  gender := g;
+	  membershipNumber := id;
+	  id := id +1;
+	  mobile:= nil;
+	  password := pass;
+	)
+	
+	pre len mail >= 5 
+		and len fName > 0 and len fName < 20
+		and len pass > 0 and len pass < 20
+		and len lName > 0 and len lName < 20
+	post firstName = fName and lastName = lName and password= pass and email = mail and gender = g and membershipNumber = id~;
+	
+	
+	-- Returns the user's name
+	public getName: () ==> seq of char
+	getName() ==
+		return firstName ^" "^ lastName;
+		
+		
+	-- Returns the user's email
+	public getEmail: () ==> seq of char
+	getEmail() ==
+		return email;
+		
+		
+	-- Returns the user's membershipNumber
+	public pure getNumber: () ==> nat1
+	getNumber() ==
+		return membershipNumber;
+		
+		
+	-- Returns the user's gender
+	public getGender: () ==> Gender
+	getGender() ==
+		return gender;
+
+		
+	-- Returns the user's password
+	public getPassword: () ==> seq of char
+	getPassword() == return password;
+		
+		
+	-- Returns the user's mobile
+	public getMobile: () ==> int
+	getMobile() ==
+		return mobile;
+		
+		
+	--Set mobile 
+	public setMobile: int ==> ()
+	setMobile(m) == (
+		mobile:=m
+	);
+	
+	
 end User

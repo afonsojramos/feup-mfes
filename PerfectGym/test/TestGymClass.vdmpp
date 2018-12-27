@@ -1,0 +1,141 @@
+class TestGymClass is subclass of Test
+types
+operations
+	
+	public newGymClass: () ==> GymClass
+	newGymClass() == (
+			dcl user:Professor := new TestUser().newProfessor();
+			return new GymClass("cycling", "cycling class", 10, user, <Monday>, mk_GymClass`Time(15,20), 90);
+	);
+	
+	-- Test create gym 
+	private createGymClass: () ==> ()
+	createGymClass() == (
+			 
+			 dcl gclass:GymClass:= newGymClass();
+		 
+		 	 -- get
+			 assertEqual(gclass.getName(), "cycling");
+			 assertEqual(gclass.getDescription(), "cycling class");
+			 assertEqual(gclass.getDate(), <Monday>);
+			 assertEqual(gclass.getCapacity(), 10);
+			 assertEqual(gclass.getTime(), mk_GymClass`Time(15,20));
+			 assertEqual(gclass.getDuration(), 90);
+			 
+			 -- set
+			 gclass.setName("run");
+			 gclass.setDescription("running class");
+			 assertEqual(gclass.getName(), "run");
+			 assertEqual(gclass.getDescription(), "running class");
+	);
+	
+	-- Test add and remove participants
+	private addParticipants: () ==> ()
+	addParticipants() == (
+			 
+			 dcl gclass:GymClass:= newGymClass();
+		 	 dcl user:User := new TestUser().newMember();
+			 
+		 	 assertEqual(card gclass.getParticipants(), 0);     --no participants
+		 	 assertEqual(gclass.getParticipants(), {});
+		 	  
+		 	 assertEqual( gclass.getCapacity(), 10);   	        -- capacity for 10 
+		 	 assertEqual( gclass.getEmptySpace(), 9); 		      -- 9 spots left
+		 	 
+		 	 --add a participant
+			 gclass.addParticipant(user);
+			 assertEqual(card gclass.getParticipants(), 1); 		--one participant
+		 	 assertEqual(gclass.getParticipants(), {user});
+		 	 
+		 	 assertEqual( gclass.getEmptySpace(), 8); 		      -- 8 spots left
+			
+			--remove a participant
+			 gclass.removeParticipant(user);
+			 assertEqual(card gclass.getParticipants(), 0); 		--no participants
+		 	 assertEqual(gclass.getParticipants(), {});
+		 	 
+		 	 assertEqual( gclass.getEmptySpace(), 9); 		      -- 9 spots left
+	);
+	
+	-- Test empty class name/description
+	private changeClassName: () ==> ()
+	changeClassName() == (
+			 
+			 dcl gclass:GymClass:= newGymClass();
+
+		 	 -- get
+			 assertEqual(gclass.getName(), "cycling");
+			 assertEqual(gclass.getDescription(), "cycling class");
+			 
+			 -- set
+			 gclass.setName(""); 				-- breaks invariant
+			 gclass.setDescription(""); -- breaks invariant
+			 
+	);
+	
+	-- Test add same participant
+ 	private addSameParticipant: () ==> ()
+	addSameParticipant() == (
+			 
+			 dcl gclass:GymClass:= newGymClass();
+		 	 dcl user:User := new TestUser().newMember();
+
+		 	 --add a participant
+			 gclass.addParticipant(user);
+			 assertEqual(card gclass.getParticipants(), 1);  
+		 	 assertEqual(gclass.getParticipants(), {user});
+			
+			 gclass.addParticipant(user); 			-- breaks pre-condition
+	);
+	
+	-- Test remove nonexisting participant
+ 	private removeNonExistingParticipant: () ==> ()
+	removeNonExistingParticipant() == (
+			 
+			 dcl gclass:GymClass:= newGymClass();
+		 	 dcl user:User := new TestUser().newMember();
+			 gclass.removeParticipant(user); 		-- breaks pre-condition
+	);
+	
+	
+	-- Test add participant to a full class
+ 	private addParticipantFullClass: () ==> ()
+	addParticipantFullClass() == (
+			 
+			dcl gclass:GymClass:= newGymClass();
+		 	dcl i:nat :=0;
+		 	
+		 	assertEqual( gclass.getCapacity(), 10);   	      -- capacity for 10 
+		 	assertEqual( card gclass.getParticipants(), 0);  	-- 0 members
+		 	assertEqual( gclass.getEmptySpace(), 9); 		      -- 9 spots left
+		 	
+		 	 -- add 9 participants
+		 	 while i<9 do(
+		 	 	 dcl user:User := new TestUser().newMember();
+		 	 	 gclass.addParticipant(user);
+		 	 	 i:= i+1;
+		 	 );	
+		 	 	 
+			 assertEqual( card gclass.getParticipants(), 9);
+			 assertEqual( gclass.getEmptySpace(), 0);
+				
+			 gclass.addParticipant(new TestUser().newMember()); -- breaks pre-condition
+	);
+	
+	
+	-- Runs all the tests associated with a gym class
+	public test: () ==> ()
+	test() == (
+	 
+			createGymClass();
+		 	addParticipants();
+		 	
+		 	/***** TEST CASES WITH INVALID INPUTS ******/
+		 	--removeNonExistingParticipant();
+		 	--changeClassName();
+		 	--addSameParticipant();
+		  --addParticipantFullClass();
+	);
+
+ 
+end TestGymClass

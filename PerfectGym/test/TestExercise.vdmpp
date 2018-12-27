@@ -1,0 +1,31 @@
+class TestExercise is subclass of Test
+types
+operations
+ 
+ 
+ 	public newExercise: () ==> Exercise
+	newExercise() == (
+		return new Exercise(4, 6, <Leg>, "leg workout");
+	);
+ 
+ 
+	private createExercise: () ==> ()
+	createExercise() == (
+			 
+			 dcl exercise:Exercise  := newExercise();
+			 assertEqual(exercise.getLoad(), 4);
+			 assertEqual(exercise.getRepetitions(), 6);
+			 assertEqual(exercise.getType(), <Leg>);
+			 assertEqual(exercise.getDescription(), "leg workout");
+	);
+	
+ 
+	public test: () ==> ()
+	test() == (
+	 
+			createExercise();
+ 
+	);
+
+ 
+end TestExercise

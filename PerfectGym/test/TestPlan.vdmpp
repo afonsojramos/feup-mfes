@@ -1,0 +1,112 @@
+class TestPlan is subclass of Test
+types
+operations
+ 
+	
+	-- Test create plan 
+	private createEmptyPlan: () ==> ()
+	createEmptyPlan() == (
+			 
+			 dcl plan:Plan := new Plan();
+			 assertEqual(plan.getExercises(), []);
+	);
+	
+	
+	-- Test create plan 
+	private createPlan: () ==> ()
+	createPlan() == (
+			 
+			 dcl series:seq of Exercise := [];
+			 dcl plan:Plan;
+			 dcl exercise1:Exercise:= new Exercise(4, 10, <Leg>, "leg workout");
+			 dcl exercise2:Exercise:= new Exercise(2, 15, <Arm>, "arm workout");
+			 
+			 series:= series ^ [exercise1];
+			 series:= series ^ [exercise2];
+			 
+			 plan := new Plan(series);
+			 
+			 assertEqual(plan.getExercises(), [exercise1, exercise2])
+	);
+	
+	-- Test add same exercise to plan
+	private addSameExercise: () ==> ()
+	addSameExercise() == (
+			 
+			 dcl series:seq of Exercise := [];
+			 dcl plan:Plan;
+			 dcl exercise1:Exercise:= new Exercise(4, 10, <Leg>, "leg workout");
+			 
+			 series:= series ^ [exercise1, exercise1];
+  
+			 plan := new Plan(series); 			--breaks precondition
+			 
+			 plan := new Plan([exercise1]);
+			 plan.addExercise(exercise1);		--breaks precondition
+	);
+	
+	
+ -- Test add exercises
+	private addExercises: () ==> ()
+	addExercises() == (
+			 
+			 dcl plan:Plan;
+			 dcl exercise1:Exercise:= new Exercise(4, 10, <Leg>, "leg workout");
+			 dcl exercise2:Exercise:= new Exercise(2, 15, <Arm>, "arm workout");
+ 			 dcl exercise3:Exercise:= new Exercise(2, 5, <Ab>, "ab workout");
+  
+			 plan := new Plan([exercise1]);  
+			 assertEqual(plan.getExercises(), [exercise1]);
+			 
+			 plan.addExercise(exercise2);
+			 
+			 assertEqual(plan.getExercises(), [exercise1, exercise2]);
+			 
+			 plan.addExercise(exercise3);
+			 
+			 assertEqual(plan.getExercises(), [exercise1, exercise2, exercise3]);
+	);
+	
+	
+	-- Test remove exercises
+	private removeExercises: () ==> ()
+	removeExercises() == (
+			 
+			 dcl plan:Plan;
+			 dcl exercise1:Exercise:= new Exercise(4, 10, <Leg>, "leg workout");
+			 dcl exercise2:Exercise:= new Exercise(2, 15, <Arm>, "arm workout");
+ 			 dcl exercise3:Exercise:= new Exercise(2, 5, <Ab>, "ab workout");
+  
+			 plan := new Plan([exercise1, exercise3, exercise2]);  
+ 
+			 assertEqual(plan.getExercises(), [exercise1, exercise3, exercise2]);
+			 
+			 plan.removeExercise(exercise1);
+			 
+			 --remove 1st element (can be changed to other element)
+			 assertEqual(plan.getExercises(), [exercise3, exercise2]); 
+			 
+			 plan.removeExercise(exercise2);
+			 plan.removeExercise(exercise3);
+			 
+			 assertEqual(plan.getExercises(), []); 
+			 
+	);
+	
+  
+	-- Runs all the tests associated with a gym class
+	public test: () ==> ()
+	test() == (
+	 
+			createEmptyPlan();
+			createPlan();
+			addExercises();
+			removeExercises();
+	 
+ 			/***** TEST CASES WITH INVALID INPUTS ******/
+		 --addSameExercise();
+		 
+	);
+
+ 
+end TestPlan

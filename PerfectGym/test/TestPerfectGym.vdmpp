@@ -1,0 +1,409 @@
+class TestPerfectGym is subclass of Test
+ 
+operations
+ 
+ 	public newGym: () ==> PerfectGym
+	newGym() == (
+		return new PerfectGym();
+	);
+	
+	-- Test new gym
+	private createGym: () ==> ()
+	createGym() == (
+		dcl gym:PerfectGym := newGym();
+		assertEqual(gym.getUsers(), {});
+		assertEqual(gym.getClasses(), {});
+	);
+	
+	-- Test add user
+	private addUser: () ==> ()
+	addUser() == (
+			 
+			 dcl gym:PerfectGym := newGym();
+			 dcl user:Member := new TestUser().newMember();
+			 
+			 assertTrue( not gym.userExists(user));
+			 assertTrue( gym.addUser(user) );
+			 assertTrue( gym.userExists(user));
+			 
+			 assertEqual( gym.getUsers(), {user});
+	);
+	
+	-- Test add repeated user
+	private addRepeatedUser: () ==> ()
+	addRepeatedUser() == (
+			 
+			 dcl gym:PerfectGym := newGym();
+			 dcl user:Member := new TestUser().newMember();
+			 
+			 --number of users is 0
+			 assertTrue( card gym.getUsers() = 0);
+			 
+			 assertTrue( not gym.userExists(user));
+			 assertTrue( gym.addUser(user) );
+			 assertTrue( gym.userExists(user));
+			 
+			 --number of users is 1
+			 assertTrue( card gym.getUsers() = 1);
+			 
+			 -- not add the user again
+			 assertTrue( gym.addUser(user) = false );
+			 assertTrue( card gym.getUsers() = 1); 		 
+	);
+	
+	--Test add user with the same ID TODO
+	-- 
+	-- 
+	-- 
+	
+	
+	-- Test add/remove classes
+	private addGymClass: () ==> ()
+	addGymClass() == (
+	
+		dcl gym:PerfectGym := newGym();
+		dcl user:Professor := new TestUser().newProfessor();
+		dcl gclass:GymClass := new GymClass("cycling", "cycling class", 10, user, <Monday>, mk_GymClass`Time(15,20), 90);
+		assertTrue (gym.addUser(user));
+ 
+		assertEqual(gym.getClasses(), {});
+		
+		gym.addClass(gclass); --add
+		assertEqual(gym.getClasses(), {gclass});
+		
+		gym.removeClass(gclass); --remove
+		assertEqual(gym.getClasses(), {});
+	);
+	
+	
+ 
+	-- Add class with same name
+	private addGymClassSameName: () ==> ()
+	addGymClassSameName() == (
+		
+		dcl gym:PerfectGym := newGym();
+		dcl user:Professor := new TestUser().newProfessor();
+		dcl gclass1:GymClass := new GymClass("cycling", "cycling class", 10, user, <Monday>, mk_GymClass`Time(15,20), 90);
+		dcl gclass2:GymClass := new GymClass("cycling", "fit class", 10, user, <Monday>, mk_GymClass`Time(08,20), 90);		
+		assertTrue (gym.addUser(user));
+		
+ 
+		assertEqual(gym.getClasses(), {});
+		
+		gym.addClass(gclass1); --add
+		assertEqual(gym.getClasses(), {gclass1});
+		
+		gym.addClass(gclass2); --breaks pre-condition 
+	);
+	
+	
+	-- Test gym schedule
+	private testGymClasses: () ==> ()
+	testGymClasses() == (
+		
+		dcl gym:PerfectGym := newGym();
+		dcl user:Professor := new TestUser().newProfessor();
+		dcl gclass1:GymClass:= new GymClass("cycling", "cycling class", 10, user, <Monday>, mk_GymClass`Time(15,20), 90);
+		dcl gclass2:GymClass:= new GymClass("fit", "fit class", 10, user, <Monday>, mk_GymClass`Time(08,20), 90);		
+		
+		assertTrue (gym.addUser(user));
+ 
+		assertEqual(gym.getClasses(), {});
+		gym.addClass(gclass1);  
+		assertEqual(gym.getClasses(), {gclass1});
+		gym.addClass(gclass2);  
+		assertEqual(gym.getClasses(), {gclass1, gclass2});
+ 	
+	);
+	
+	-- Test gym schedule
+	private testGymSchedule: () ==> ()
+	testGymSchedule() == (
+		
+		dcl gym:PerfectGym := newGym();
+		dcl user:Professor := new TestUser().newProfessor();
+		dcl gclass1:GymClass:= new GymClass("cycling", "cycling class", 10, user, <Monday>, mk_GymClass`Time(15,20), 90);
+		dcl gclass2:GymClass := new GymClass("fit", "fit class", 10, user, <Monday>, mk_GymClass`Time(08,20), 90);		
+		dcl gclass3:GymClass:= new GymClass("jump", "jump class", 10, user, <Monday>, mk_GymClass`Time(20,30), 90);	
+		dcl gclass4:GymClass := new GymClass("airfit", "fit class", 10, user, <Saturday>, mk_GymClass`Time(09,40), 60);	
+		dcl schedule: map GymClass`Day_week to seq of GymClass;
+		
+		assertTrue (gym.addUser(user));
+
+		schedule:= gym.getSchedule();
+		
+		--empty schedule
+		assertEqual(gym.getClasses(), {});
+		assertEqual(schedule, {|->});
+		
+		--add classes
+		gym.addClass(gclass1);  
+		gym.addClass(gclass2);  
+		gym.addClass(gclass3); 
+		gym.addClass(gclass4); 
+	
+		schedule:= gym.getSchedule();
+		
+		--ordered schedule
+		assertEqual(gym.getClasses(), {gclass1, gclass2, gclass3, gclass4});
+		
+		assertEqual(gym.getSchedule(<Monday>), {<Monday>|->[gclass2, gclass1, gclass3]});
+		assertEqual(schedule, {<Monday>|->[gclass2, gclass1, gclass3], <Saturday>|->[gclass4]});
+		
+	);
+	
+	
+	-- Test overlap classes
+	private gymClassesTimeOverlap: () ==> ()
+	gymClassesTimeOverlap() == (
+		
+		dcl gym:PerfectGym := newGym();
+		dcl user:Professor := new TestUser().newProfessor();
+		dcl gclass1:GymClass:= new GymClass("cycling", "cycling class", 10, user, <Monday>, mk_GymClass`Time(15,20), 90);
+		dcl gclass2:GymClass:= new GymClass("fit", "fit class", 10, user, <Monday>, mk_GymClass`Time(16,49), 90);		 	
+		
+		assertTrue (gym.addUser(user));
+		
+		assertEqual(gym.getClasses(), {});
+		gym.addClass(gclass1);  
+		assertEqual(gym.getClasses(), {gclass1});
+		gym.addClass(gclass2);  --breaks pre condition
+		
+	);
+ 
+ 
+ 	-- Test login
+ 	private testLogin: () ==> ()
+	testLogin() == (
+		
+		 dcl gym:PerfectGym := newGym();
+		 dcl user:Member := new TestUser().newMember(); 
+		 assertTrue( gym.addUser(user) );
+		 assertTrue( gym.userExists(user));
+		 assertTrue( gym.getLoggedUser() = nil); 
+		 assertTrue( gym.loginMember(user.getNumber(), user.getPassword()) = true);
+		 assertEqual( gym.getLoggedUser(), user); 
+	 	 gym.logoutMember();
+	 	 assertEqual( gym.getLoggedUser(), nil); 
+	 	
+	);
+	
+	-- Test failed login
+ 	private testFailedLogin: () ==> ()
+	testFailedLogin() == (
+	  	
+	   dcl gym:PerfectGym := newGym(); 
+		 dcl user:Member := new TestUser().newMember(); 
+		 
+		 assertTrue( gym.getLoggedUser() = nil); 
+		 assertTrue( gym.loginMember(user.getNumber(), user.getPassword()) = false);	--user not registed
+		 assertTrue( gym.getLoggedUser() = nil); 
+		 
+		 assertTrue( gym.addUser(user) );
+		 assertTrue( gym.userExists(user));
+
+		 assertTrue( gym.loginMember(user.getNumber(), "wrongPassword") = false);			--wrong combination
+		 assertTrue( gym.getLoggedUser() = nil); 
+	 
+	);
+	
+	
+	-- Test member add classes
+	public testAddGymClasses: () ==> ()
+	testAddGymClasses() == (
+	
+	  dcl gym:PerfectGym := newGym();
+		dcl prof:Professor := new TestUser().newProfessor();
+		dcl gclass1:GymClass := new GymClass("cycling", "cycling class", 10, prof, <Monday>, mk_GymClass`Time(15,20), 90);
+		dcl user:Member := new TestUser().newMember(); 
+		
+		assertTrue( gym.addUser(user) );
+		assertTrue( gym.addUser(prof) );
+		gym.addClass( gclass1 ); 
+		
+		
+		-- 1. login user
+		assertTrue( gym.getLoggedUser() = nil); 
+		assertTrue( gym.loginMember(user.getNumber(), user.getPassword()) = true);
+		assertEqual( gym.getLoggedUser(), user);
+		
+		-- 2. enroll in gym class
+		gym.enrollGymClass(user, gclass1);
+		
+		assertEqual( gclass1.getParticipants(), {user});
+		assertEqual( gym.getClasses(user), {gclass1});
+ 
+	);
+	
+	-- Test member remove classes
+	public testRemoveGymClasses: () ==> ()
+	testRemoveGymClasses() == (
+	
+	  dcl gym:PerfectGym := newGym();
+		dcl prof:Professor := new TestUser().newProfessor();
+		dcl gclass1:GymClass := new GymClass("cycling", "cycling class", 10, prof, <Monday>, mk_GymClass`Time(15,20), 90);
+		dcl gclass2:GymClass := new GymClass("fit", "fit class", 10, prof, <Tuesday>, mk_GymClass`Time(07,20), 90);
+		
+		dcl user:Member := new TestUser().newMember(); 
+		assertTrue( gym.addUser(user) );
+		assertTrue( gym.addUser(prof) );
+		gym.addClass( gclass1 ); 
+		gym.addClass( gclass2 );
+		
+		
+		-- 1. login user
+		assertTrue( gym.getLoggedUser() = nil); 
+		assertTrue( gym.loginMember(user.getNumber(), user.getPassword()) = true);
+		assertEqual( gym.getLoggedUser(), user);
+		
+		-- 2. enroll in gym classes
+		gym.enrollGymClass(user, gclass1);
+		assertEqual( gclass1.getParticipants(), {user});
+		assertEqual( gym.getClasses(user), {gclass1});
+		gym.enrollGymClass(user, gclass2);
+		assertEqual( gclass2.getParticipants(), {user});
+		assertEqual( gym.getClasses(user), {gclass2, gclass1});
+ 
+ 		-- 3. remove user from a gym class
+ 		gym.removeUserGymClass(user, gclass1);
+ 		assertEqual( gclass1.getParticipants(), {});
+ 		assertEqual( gym.getClasses(user), {gclass2});
+ 		assertEqual( gclass2.getParticipants(), {user});
+ 		
+	);
+	
+	-- Test professor classes
+	public testProfessorClasses: () ==> ()
+	testProfessorClasses() == (
+	
+	  dcl gym:PerfectGym := newGym();
+		dcl prof:Professor := new TestUser().newProfessor();
+		dcl gclass1:GymClass := new GymClass("cycling", "cycling class", 10, prof, <Monday>, mk_GymClass`Time(15,20), 90);
+		dcl gclass2:GymClass := new GymClass("fit", "fit class", 10, prof, <Tuesday>, mk_GymClass`Time(07,20), 90);
+	
+		assertTrue( gym.addUser(prof) );
+		gym.addClass( gclass1 ); 
+		gym.addClass( gclass2 );
+		
+		assertEqual(gym.getClasses(prof), {gclass1, gclass2});
+ 		
+	);
+	
+	-- Test fail enroll class
+	public testFailEnrollGymClass: () ==> ()
+	testFailEnrollGymClass() == (
+		
+		dcl gym:PerfectGym := newGym();
+		dcl prof:Professor := new TestUser().newProfessor();
+		dcl gclass1:GymClass := new GymClass("cycling", "cycling class", 10, prof, <Monday>, mk_GymClass`Time(15,20), 90);
+ 
+		dcl user:Member := new TestUser().newMember(); 
+		
+		assertTrue( gym.addUser(user) );
+		assertTrue( gym.addUser(prof) );
+		
+		-- 1. login user
+		assertTrue( gym.getLoggedUser() = nil); 
+		assertTrue( gym.loginMember(user.getNumber(), user.getPassword()) = true);
+		assertEqual( gym.getLoggedUser(), user);
+		
+		-- 2. enroll in gym classes
+		gym.enrollGymClass(user, gclass1);				-- breaks precondition (class not in the system)
+ 			
+	 	gym.logoutMember();
+	 	assertEqual( gym.getLoggedUser(), nil); 
+ 		
+ 		gym.addClass( gclass1 ); 
+ 		gym.enrollGymClass(user, gclass1);				-- breaks precondition (user not logged in)
+ 
+ 		
+	);
+	
+	-- Test add training plan
+	public testAddTrainingPlan: () ==> ()
+	testAddTrainingPlan() == (
+		
+		dcl gym:PerfectGym := newGym();
+		dcl prof:Professor := new TestUser().newProfessor();	 
+		dcl user:Member := new TestUser().newMember(); 
+ 
+		dcl exercise1:Exercise:= new Exercise(4, 10, <Leg>, "leg workout");
+		dcl exercise2:Exercise:= new Exercise(2, 15, <Arm>, "arm workout");
+		dcl plan:Plan := new Plan([exercise1, exercise2]);
+	 
+		assertTrue( gym.addUser(user) );
+		assertTrue( gym.addUser(prof) );
+		
+		-- 1. login prof
+		assertTrue( gym.getLoggedUser() = nil); 
+		assertTrue( gym.loginMember(prof.getNumber(), prof.getPassword()) = true);
+		assertEqual( gym.getLoggedUser(), prof);
+		
+		-- 2. add that training plan to the user
+		gym.createTrainingPlan(prof, user, plan);
+		
+		-- 3. user check the training plan
+	 	gym.logoutMember();
+	 	assertEqual( gym.getLoggedUser(), nil); 
+ 		assertTrue( gym.loginMember(user.getNumber(), user.getPassword()) = true);
+ 		assertEqual( gym.getLoggedUser(), user);
+ 		
+ 		assertEqual(gym.getPlan(user), plan);
+ 	
+	);
+	
+	-- Test add training plan
+	public testPermissions: () ==> ()
+	testPermissions() == (
+		
+		dcl gym:PerfectGym := newGym();
+		dcl prof:Professor := new TestUser().newProfessor();	 
+		dcl user:Member := new TestUser().newMember(); 
+ 		dcl user2:Member := new TestUser().newMember(); 
+ 		
+		dcl exercise1:Exercise:= new Exercise(4, 10, <Leg>, "leg workout");
+		dcl exercise2:Exercise:= new Exercise(2, 15, <Arm>, "arm workout");
+		dcl plan:Plan := new Plan([exercise1, exercise2]);
+	 
+		assertTrue( gym.addUser(user) );
+		assertTrue( gym.addUser(user2) );
+		assertTrue( gym.addUser(prof) );
+		
+		-- user login
+		assertEqual( gym.getLoggedUser(), nil); 
+ 		assertTrue( gym.loginMember(user.getNumber(), user.getPassword()) = true);
+ 		assertEqual( gym.getLoggedUser(), user);
+		
+		-- add that training plan to the user
+		gym.createTrainingPlan(prof, user, plan); --breaks precondition
+ 	
+ 		assertEqual(gym.getPlan(user), nil);
+ 		assertEqual(gym.getPlan(user2), nil);	--breaks precondition (cant see other members plan)
+ 	
+	);
+ 	
+	public test: () ==> ()
+	test() == (
+	 		
+	 	 createGym();
+		 addUser();
+		 addRepeatedUser();
+		 addGymClass();
+		 testGymClasses();
+		 testGymSchedule();
+		 testLogin();
+		 testFailedLogin();
+		 testAddGymClasses();
+		 testRemoveGymClasses();
+ 		 testAddTrainingPlan();
+ 		 testProfessorClasses();
+		 
+		 /***** TEST CASES WITH INVALID INPUTS ******/
+		 --addGymClassSameName();
+		 --gymClassesTimeOverlap();
+		 --testFailEnrollGymClass();
+		 --testPermissions();
+	);
+
+ 
+end TestPerfectGym

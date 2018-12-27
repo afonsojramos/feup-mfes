@@ -1,0 +1,175 @@
+class GymClass
+
+values
+	
+	public classDuration: set of nat1 = {45, 60, 90}; --minutes
+	public classCapacity: set of nat1 = {10, 20, 50}; --members
+	
+types
+	
+	-- Day in the week  
+	public Day_week = <Monday> | <Tuesday> | <Wednesday> | <Thursday> | <Friday> | <Saturday> | <Sunday>;
+	
+	-- Type of class
+	public ClassType = <Cycling> | <BodyCombat> | <BodyAttack> | <Yoga> | <Zumba> | <RPM> | <Step>;	--TODO
+	
+	-- Time in the day
+	public Time:: hour : nat
+								minute : nat
+								
+	inv t == t.hour < 24 and t.minute < 60;
+	
+	-- Duration  
+	public Duration = nat1
+		inv d == d in set classDuration;	
+	
+	-- Capacity 						
+	public Capacity = nat1
+		inv c == c in set classCapacity;	
+
+instance variables
+	
+	--Name
+	private name: seq of char := [];
+	
+	-- Description
+	private description: seq of char := [];
+	
+	-- Professor
+	private professor:Professor;
+	
+	-- Participants
+	private participants: set of Member := {};
+	
+	-- Date, time and duration
+	private date: Day_week;
+	private time: Time;
+	private duration: Duration;
+	
+ 	-- Capacity
+	private capacity: Capacity; 
+	
+	-- available spots
+	private availableSpace:nat;
+	
+	-- consistent available spots
+	inv availableSpace = capacity - card participants - 1 and availableSpace >= 0;
+	
+ 	-- No empty name or description
+ 	inv len name > 0 and len description > 0;
+ 
+	
+operations
+
+ 	-- constructor 
+	public GymClass : seq of char * seq of char * Capacity * Professor * Day_week * Time * Duration ==> GymClass
+	GymClass (className, classDescription, cap, prof, dt, tim, dur) == (
+		name := className;
+		description := classDescription;
+		capacity:= cap;
+		professor := prof;
+		date := dt;
+		time := tim;
+		duration := dur;
+		
+		availableSpace := capacity - 1; --professor
+		
+		return self
+	)
+	pre len className > 0 and len classDescription > 0;
+	
+	
+	-- get the class name
+ 	pure public getName : () ==> seq of char	
+  getName () == (
+  	return name;
+  );
+  	
+	-- set the class name
+ 	public setName :  seq of char ==> ()
+  setName (n) == (
+  	name := n;
+  );
+  	
+ 	-- get the class description
+ 	pure public getDescription : () ==>  seq of char
+  getDescription () == (
+  	return description;
+  );
+  	
+ 	-- set the class description
+	public setDescription :  seq of char ==> ()
+	setDescription (d) == (
+		description := d;
+	);
+	
+	-- get all the participants	
+	public pure getParticipants : () ==> set of Member
+	getParticipants() == (
+		return participants;
+	);
+	
+	-- get empty space
+	public getEmptySpace: () ==> nat
+	getEmptySpace()== (
+		return availableSpace;
+	); 
+	 
+	-- add a new participant
+	public addParticipant: Member ==> ()
+	addParticipant(Member) == (
+		
+		atomic (
+			participants := participants union {Member};
+			availableSpace := availableSpace - 1;
+			);
+	)
+	pre Member not in set participants and availableSpace > 0
+	post Member in set participants and availableSpace = availableSpace~ -1 ;	
+	
+	
+	-- remove a participant
+	public removeParticipant: Member ==> ()
+	removeParticipant(Member) == (
+		
+		atomic (
+			participants := participants \ {Member};
+			availableSpace := availableSpace + 1;
+		);
+	)
+	pre Member in set participants 
+	post participants = participants~ \ {Member}  and availableSpace = availableSpace~ +1 ;		
+	
+	
+	-- get date
+	public pure getDate : () ==> Day_week
+	getDate() == (
+		return date;
+	);
+	
+	-- get time
+	public pure getTime : () ==> Time
+	getTime() == (
+		return time;
+	);
+	
+	-- get duration
+	public pure getDuration : () ==> nat1
+	getDuration() == (
+		return duration;
+	);
+	  
+	-- get capacity
+	public pure getCapacity : () ==> nat1
+	getCapacity() == (
+		return capacity;
+	);
+	
+	--get professor
+	public pure getProfessor:() ==> Professor
+	getProfessor() == (
+		return professor;
+	);
+ 
+	  		
+end GymClass

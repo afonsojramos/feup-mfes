@@ -1,0 +1,65 @@
+class Plan
+
+instance variables
+	
+	series: seq of Exercise;
+	
+operations
+	
+	-- constructor
+	public Plan : seq of Exercise ==> Plan
+	Plan(ex) == (
+		series:= ex;
+	)
+	pre len ex = card elems ex;	--no same exercises
+	
+	
+	-- empty constructor
+	public Plan : () ==> Plan
+	Plan() == (
+		series:= []
+	);
+	
+	-- get exercices
+	public getExercises:() ==> seq of Exercise
+	getExercises()  ==
+		return series;
+		
+		
+	-- add exercice to series
+	public addExercise: Exercise ==> ()
+	addExercise(ex) == (
+		 series:= series ^ [ex]
+	)
+	pre ex not in set elems series
+	post len series = len series~ +1 and series(len series) = ex;
+	
+	
+	-- remove exercise from series
+	public removeExercise:Exercise ==> ()
+	removeExercise(ex) == (
+	
+		 dcl index:nat := 1;
+		 dcl exercises: seq of Exercise := series;
+		 dcl done:bool := false;
+		 
+		 while ( done = false ) do (
+		 	if ( ex = hd exercises) then (
+				
+				done:=true;
+				
+				if( index = 1 ) then  series := tl series																	-- first element
+				else if(index = len series) then series:= series(1,..., len series-1)			-- last element
+				else series := series(1,..., index-1) ^ series(index+1, ..., len series)  -- middle element
+				
+			)  else(
+			
+				index := index +1;
+				exercises := tl exercises;
+			)
+		 )
+	)
+	pre ex in set elems series
+	post ex not in set elems series;
+	
+end Plan

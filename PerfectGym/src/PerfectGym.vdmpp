@@ -1,0 +1,262 @@
+class PerfectGym
+types
+-- TODO Define types here
+values
+-- TODO Define values here
+instance variables
+	
+	-- Users
+	users: map nat1 to User;
+	loggedinUser : [User];
+	
+	-- Gym classes	
+	classes: set of GymClass;
+ 
+	-- Invariants 
+	-- No two users with the same ID
+	inv not exists u1, u2 in set rng users & u1 <> u2 and u1.getNumber() = u2.getNumber();
+	
+	-- Consistent map 
+	inv forall number in set dom users & users(number).getNumber()=number;
+
+	-- No two gym classes with the same name
+	inv not exists c1, c2 in set classes & c1 <> c1 and c1.getName() = c2.getName(); 	 
+	
+	-- Logged user belongs to users
+	inv loggedinUser<>nil => loggedinUser in set rng users;
+	
+operations
+
+	-- Constructor
+	public PerfectGym : () ==> PerfectGym
+	PerfectGym () == (
+		users := {|->};
+		classes := {};
+		loggedinUser := nil;
+	);
+	
+	-- Login member
+ 	public loginMember: nat1 * seq of char ==> bool
+ 	loginMember(membershipnumber, pass) == (
+ 		
+ 		if(userRegisted(membershipnumber)) then (
+ 			
+ 			dcl user:User := users(membershipnumber);
+ 			
+ 			if( user.getPassword() = pass ) then (
+ 				loggedinUser := user;
+ 				return true;
+ 			)
+ 		
+ 		);
+ 		
+ 		return false;
+ 	)
+ 	pre len pass > 0 and len pass < 20 and loggedinUser = nil	         -- only one user at a time
+  post ( RESULT = true and loggedinUser <> nil) or RESULT = false;
+ 
+ 
+ 	-- Log out member
+ 	public logoutMember: () ==> ()
+ 	logoutMember() == loggedinUser := nil
+ 	pre loggedinUser <> nil
+ 	post loggedinUser = nil;
+ 
+ 
+ 	-- Get loggedinUser
+ 	public pure getLoggedUser: () ==> [User]
+ 	getLoggedUser() == (
+ 			return loggedinUser;
+ 	);
+ 	 
+ 	 
+ 	-- Get users
+ 	public getUsers: () ==> set of User
+ 	getUsers() == (
+ 			return rng users;
+ 	);
+
+ 	-- Checks if there is a user with a given membership number
+ 	public userRegisted: nat1 ==> bool
+ 	userRegisted(number) == (
+ 			return number in set dom users;
+ 	);
+ 	
+ 	--Checks if a user exists
+ 	public pure userExists: User ==> bool
+ 	userExists(user) == (
+ 			return user in set rng users;
+ 	);
+ 	
+ 	-- Add a user if there is no user with the same membership number
+ 	public addUser : User ==> bool
+ 	addUser (u) == (
+ 		
+ 		if( not userRegisted(u.getNumber())) then (
+ 				
+ 				--add user 
+ 				users := users munion { u.getNumber() |-> u };
+ 			
+ 			return true;
+ 		
+ 		); 
+ 		return false;
+ 	) 
+ 	post ( RESULT = true and users = users~ munion { u.getNumber() |-> u } ) or ( RESULT = false and users = users~ );	
+
+
+	-- Get classes
+	public getClasses: () ==> set of GymClass
+	getClasses()==(
+		return classes;
+	);
+	
+	-- Checks if there is a class with the same name
+	public pure classRegisted: GymClass ==> bool
+	classRegisted(gclass) == (
+		
+		dcl name: seq of char := gclass.getName();
+		for all gymclass in set classes do(
+		
+			if( gymclass.getName() = name) then (
+				
+				return true;
+				
+			);
+		);
+		return false;
+	);
+	
+	
+	-- Add a class if there is no class with the same name
+	public addClass: GymClass ==> ()
+	addClass (gclass) == (
+		classes:= classes union {gclass};
+	)
+	pre gclass not in set classes and not classRegisted(gclass) and userExists(gclass.getProfessor()) and Utilities`overlapClasses(gclass, classes)= false
+	post classes = classes~ union {gclass};
+	
+	
+	--Remove a class 
+	public removeClass: GymClass ==> ()
+	removeClass(gclass) == (
+		classes:= classes \ {gclass};
+	)
+	pre gclass in set classes
+	post classes = classes~ \ {gclass};
+	
+ 
+	-- Get gym classes schedule
+	public getSchedule: () ==> map GymClass`Day_week to seq of GymClass
+	getSchedule() == (
+	
+		dcl result: map GymClass`Day_week to seq of GymClass := {|->}; 
+ 
+		for all gclass in set classes do(
+			
+			dcl dayWeek: GymClass`Day_week := gclass.getDate();
+			
+			if(dayWeek not in set dom result) then (
+				
+				result:= result ++ {dayWeek|->[gclass]};
+				
+			)else(
+				
+				dcl list_aux:seq of GymClass := result(dayWeek);
+				
+				result:= result ++ {dayWeek|->list_aux ^ [gclass]};
+			);
+		);
+		
+		--order by time	
+		for all day in set dom result do(	
+			result(day):= Utilities`insertionSort(result(day));
+		);
+		
+		return result;
+	);
+	
+	-- Get gym classes in a given week day
+	public getSchedule: (GymClass`Day_week ) ==> map GymClass`Day_week to seq of GymClass
+	getSchedule(day) == (
+	
+	 	return {day} <: getSchedule();
+	);
+	
+	-- Get gym classes of a professor
+	public getClasses: Professor ==> set of GymClass
+	getClasses(prof) == (
+		
+		dcl result: set of GymClass:= {};
+		
+		for all gc in set classes do(
+			
+			if(prof = gc.getProfessor()) then result:= result union {gc};
+			 
+		);
+		return result;
+	);
+	
+	
+ 	---------------------------------------------------------------------
+ 	------------------ When the member is logged in ---------------------
+ 	---------------------------------------------------------------------
+ 	
+	-- Enroll member in a gym class
+	public enrollGymClass: Member * GymClass ==> ()
+	enrollGymClass(member, gclass) == (	
+		gclass.addParticipant(member); 
+	)
+	pre getLoggedUser() = member and gclass in set classes
+	post member in set gclass.getParticipants();
+	
+	
+	-- Remove member from a gym class
+	public removeUserGymClass: Member * GymClass ==> ()
+	removeUserGymClass(member, gclass) == (
+		gclass.removeParticipant(member);
+	)
+	pre getLoggedUser() = member and gclass in set classes
+	post member not in set gclass.getParticipants();
+	
+
+	-- Get gym classes of a member
+	public getClasses: Member ==> set of GymClass
+	getClasses(member) == (
+		
+		dcl result: set of GymClass:= {};
+		
+		for all gc in set classes do(
+			
+			if(member in set gc.getParticipants()) then result:= result union {gc};
+			 
+		);
+		return result;
+	)
+	pre getLoggedUser() = member;
+	
+	-- Get training plan  
+	public getPlan: Member ==> [Plan]
+	getPlan(member) == (
+		
+		return member.getTrainingPlan();
+	)
+	pre getLoggedUser() = member;
+	
+	
+	
+ 	---------------------------------------------------------------------
+ 	------------------ When the professor is logged in ---------------------
+ 	---------------------------------------------------------------------
+
+	-- Create a training plan for a member
+	public createTrainingPlan: Professor * Member * Plan ==> ()
+	createTrainingPlan(professor, member, plan) == (	--TODO guardar o pt do user ? 
+		 member.addTrainingPlan(plan);
+	)
+	pre getLoggedUser() = professor and userExists(member)
+	post member.getTrainingPlan() = plan;
+ 
+  
+
+end PerfectGym

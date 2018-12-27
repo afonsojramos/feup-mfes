@@ -1,0 +1,21 @@
+class Professor is subclass of User
+types
+
+values
+
+instance variables
+ 
+
+operations
+
+	-- Constructor
+	public Professor : seq of char * seq of char * seq of char * Gender * seq of char ==> Professor
+	Professor (fName, lName, mail, g, pass) == (
+	
+		User(fName, lName, mail, g, pass);
+	
+	)
+	 
+			
+	
+end Professor

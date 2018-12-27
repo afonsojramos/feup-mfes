@@ -1,0 +1,25 @@
+class Main is subclass of Test
+types
+operations
+
+	public static main: () ==> ()
+	main() == (
+	 	
+	 	 -- test user
+		 new TestUser().test();
+		 
+		 --test perfectgym
+		 new TestPerfectGym().test();
+		 
+		 --test gymclass
+		 new TestGymClass().test();
+		 
+		 --test exercise
+		 new TestExercise().test();
+		 
+		 --test training plan
+		 new TestPlan().test();
+	);
+
+ 
+end Main

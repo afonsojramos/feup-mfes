@@ -1,0 +1,57 @@
+class Member is subclass of User
+types
+values
+
+instance variables
+	
+	-- Member's train plan
+	private trainingPlan : [Plan] := nil;
+	
+	-- Member's weight
+	private weight: real;
+	
+	-- Member's height
+	private height: real;
+ 
+	inv weight > 0 and height > 0;
+	
+	-----
+	-- mensalidade?? TODO consoante idade  ter plano Jovem, senior e isso; invariante
+	-----
+	
+	
+operations
+
+	-- Constructor
+	public Member : seq of char * seq of char * seq of char * Gender * real * real * seq of char ==> Member
+	Member (fName, lName, mail, g, w, h, pass) == (
+		
+		weight:= w;
+		height:= h;
+		User(fName, lName, mail, g, pass);
+		
+	)
+	pre w >0 and h > 0;
+
+
+	-- Set member's training plan
+	public addTrainingPlan: Plan ==> ()
+	addTrainingPlan(plan) == (
+		trainingPlan := plan;
+	);
+	
+	-- Get member's training plan
+	public pure getTrainingPlan: () ==> [Plan]
+	getTrainingPlan() == return trainingPlan;
+	
+	
+	-- Get member weight
+	public getWeight: () ==> real
+	getWeight() == return weight;
+	
+	
+	-- Get member height
+	public getHeight: () ==> real
+	getHeight() == return height;		
+	
+end Member
