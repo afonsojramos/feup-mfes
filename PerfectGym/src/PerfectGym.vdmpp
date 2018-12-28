@@ -90,12 +90,29 @@ operations
  	
  	-- Add a user if there is no user with the same membership number
  	public addUser : User ==> bool
- 	addUser (u) == (
+ 	addUser(u) == (
  		
  		if( not userRegisted(u.getNumber())) then (
  				
  				--add user 
  				users := users munion { u.getNumber() |-> u };
+ 			
+ 			return true;
+ 		
+ 		); 
+ 		return false;
+ 	) 
+ 	post ( RESULT = true and users = users~ munion { u.getNumber() |-> u } ) or ( RESULT = false and users = users~ );	
+ 	
+ 	-- Add a user if there is no user with the same membership number and has referral
+ 	public addUserReferral : User * User ==> bool
+ 	addUserReferral(r,u) == (
+ 		
+ 		if( not userRegisted(u.getNumber())) then (
+ 				
+ 				--add user 
+ 				users := users munion { u.getNumber() |-> u };
+ 				r.setReferrals();
  			
  			return true;
  		
