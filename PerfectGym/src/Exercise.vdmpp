@@ -23,19 +23,19 @@ operations
 	)
 	pre len d > 0 and len d < 100;
 	
- 	-- Get load
+ 	-- Get Load
  	public getLoad:() ==> nat
  	getLoad() == return load;
  	
- 	-- Get load
+ 	-- Get Repetitions
  	public getRepetitions:() ==> nat
  	getRepetitions() == return repetitions;
  	
- 	-- Get load
+ 	-- Get Type
  	public getType:() ==> ExerciseType
  	getType() == return type;
  	
- 	-- Get load
+ 	-- Get Description
  	public getDescription:() ==> seq of char
  	getDescription() == return description;
  	

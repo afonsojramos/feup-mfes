@@ -8,6 +8,11 @@ operations
 		return new Member("Cláudia", "Rodrigues", "up201508262@fe.up.pt", <Feminine>, 50, 1.67, "qwerty1234");
 	);
 	
+	public newMember2: () ==> Member
+	newMember2() == (
+		return new Member("Afonso", "Ramos", "up201506239@fe.up.pt", <Masculine>, 75, 1.91, "qwerty1234");
+	);
+	
 	--Creates a new professor
 	public newProfessor: () ==> Professor
 	newProfessor() == (
@@ -30,6 +35,21 @@ operations
 	);
 	
 	-- Test 2
+	private memberTest2: () ==> ()
+	memberTest2() == (
+			
+			dcl user:Member := newMember2();
+			assertTrue(user.getName() = "Afonso Ramos"); 
+			assertTrue(user.getEmail() = "up201506239@fe.up.pt");	
+			assertTrue(user.getPassword() = "qwerty1234");
+			assertTrue(user.getGender() = <Masculine>);	
+			assertTrue(user.getNumber() = 2);	
+			
+			assertTrue(user.getWeight() = 75);
+			assertTrue(user.getHeight() = 1.91);	
+	);
+	
+	-- Test 3
 	private professorTest: () ==> ()
 	professorTest() == (
 			
@@ -38,7 +58,7 @@ operations
 			assertTrue(user.getEmail() = "test@test.com");	
 			assertTrue(user.getPassword() = "qwerty1234");
 			assertTrue(user.getGender() = <Masculine>);	
-			assertTrue(user.getNumber() = 2);	
+			assertTrue(user.getNumber() = 3);	
 	);
 	 
 	 
@@ -47,6 +67,7 @@ operations
 	test() == (
 	 
 		 memberTest();
+		 memberTest2();
 		 professorTest();
 		 
 	);
