@@ -2,14 +2,19 @@ class Plan
 
 instance variables
 	
-	series: seq of Exercise;
+	-- Exercises
+	private series: seq of Exercise;
+	
+	-- Professor
+	private professor:Professor;
 	
 operations
 	
 	-- constructor
-	public Plan : seq of Exercise ==> Plan
-	Plan(ex) == (
+	public Plan : seq of Exercise * Professor ==> Plan
+	Plan(ex, prof) == (
 		series:= ex;
+		professor:= prof;
 	)
 	pre len ex = card elems ex;	--no same exercises
 	
@@ -17,13 +22,18 @@ operations
 	-- empty constructor
 	public Plan : () ==> Plan
 	Plan() == (
-		series:= []
+		series:= [];
 	);
 	
 	-- get exercices
 	public getExercises:() ==> seq of Exercise
 	getExercises()  ==
 		return series;
+		
+	-- get professor
+	public getProfessor:() ==> Professor
+	getProfessor()  ==
+		return professor;
 		
 		
 	-- add exercice to series

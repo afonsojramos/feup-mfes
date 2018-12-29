@@ -114,7 +114,7 @@ operations
 		 	 	 dcl user:User := new TestUser().newMember();
 		 	 	 gclass.addParticipant(user);
 		 	 	 i:= i+1;
-		 	 );	
+		 	);	
 		 	 	 
 			 assertEqual( card gclass.getParticipants(), 9);
 			 assertEqual( gclass.getEmptySpace(), 0);

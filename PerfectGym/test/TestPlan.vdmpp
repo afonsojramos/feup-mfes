@@ -18,15 +18,17 @@ operations
 			 
 			 dcl series:seq of Exercise := [];
 			 dcl plan:Plan;
+			 dcl prof:Professor := new TestUser().newProfessor();	
 			 dcl exercise1:Exercise:= new Exercise(4, 10, <Leg>, "leg workout");
 			 dcl exercise2:Exercise:= new Exercise(2, 15, <Arm>, "arm workout");
 			 
 			 series:= series ^ [exercise1];
 			 series:= series ^ [exercise2];
 			 
-			 plan := new Plan(series);
+			 plan := new Plan(series, prof);
 			 
-			 assertEqual(plan.getExercises(), [exercise1, exercise2])
+			 assertEqual(plan.getExercises(), [exercise1, exercise2]);
+			 assertEqual(plan.getProfessor(), prof);
 	);
 	
 	-- Test add same exercise to plan
@@ -35,13 +37,14 @@ operations
 			 
 			 dcl series:seq of Exercise := [];
 			 dcl plan:Plan;
+			 dcl prof:Professor := new TestUser().newProfessor();	
 			 dcl exercise1:Exercise:= new Exercise(4, 10, <Leg>, "leg workout");
 			 
 			 series:= series ^ [exercise1, exercise1];
   
-			 plan := new Plan(series); 			--breaks precondition
+			 plan := new Plan(series, prof); 			--breaks precondition
 			 
-			 plan := new Plan([exercise1]);
+			 plan := new Plan([exercise1], prof);
 			 plan.addExercise(exercise1);		--breaks precondition
 	);
 	
@@ -51,20 +54,25 @@ operations
 	addExercises() == (
 			 
 			 dcl plan:Plan;
+			 dcl prof:Professor := new TestUser().newProfessor();	
 			 dcl exercise1:Exercise:= new Exercise(4, 10, <Leg>, "leg workout");
 			 dcl exercise2:Exercise:= new Exercise(2, 15, <Arm>, "arm workout");
  			 dcl exercise3:Exercise:= new Exercise(2, 5, <Ab>, "ab workout");
   
-			 plan := new Plan([exercise1]);  
+			 plan := new Plan([exercise1], prof);  
 			 assertEqual(plan.getExercises(), [exercise1]);
+			 assertEqual(plan.getProfessor(), prof);
 			 
 			 plan.addExercise(exercise2);
 			 
 			 assertEqual(plan.getExercises(), [exercise1, exercise2]);
+			 assertEqual(plan.getProfessor(), prof);
 			 
 			 plan.addExercise(exercise3);
 			 
 			 assertEqual(plan.getExercises(), [exercise1, exercise2, exercise3]);
+			 assertEqual(plan.getProfessor(), prof);
+			 
 	);
 	
 	
@@ -73,11 +81,12 @@ operations
 	removeExercises() == (
 			 
 			 dcl plan:Plan;
+			 dcl prof:Professor := new TestUser().newProfessor();	
 			 dcl exercise1:Exercise:= new Exercise(4, 10, <Leg>, "leg workout");
 			 dcl exercise2:Exercise:= new Exercise(2, 15, <Arm>, "arm workout");
  			 dcl exercise3:Exercise:= new Exercise(2, 5, <Ab>, "ab workout");
   
-			 plan := new Plan([exercise1, exercise3, exercise2]);  
+			 plan := new Plan([exercise1, exercise3, exercise2], prof);  
  
 			 assertEqual(plan.getExercises(), [exercise1, exercise3, exercise2]);
 			 

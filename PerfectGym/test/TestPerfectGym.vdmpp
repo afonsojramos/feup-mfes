@@ -23,7 +23,7 @@ operations
 			 dcl user:Member := new TestUser().newMember();
 			 
 			 assertTrue( not gym.userExists(user));
-			 assertTrue( gym.addUser(user) );
+			 assertTrue( gym.addUser(user));
 			 assertTrue( gym.userExists(user));
 			 
 			 assertEqual( gym.getUsers(), {user});
@@ -38,11 +38,11 @@ operations
 			 dcl user2:Member := new TestUser().newMember2();
 			 
 			 assertTrue( not gym.userExists(user));
-			 assertTrue( gym.addUser(user) );
-			 assertTrue( gym.addUserReferral(user, user2) );
+			 assertTrue( gym.addUser(user));
+			 assertTrue( gym.addUserReferral(user, user2));
 			 assertTrue( gym.userExists(user));
 			 assertTrue( gym.userExists(user2));
-			 assertTrue( user.getReferrals() = 1);
+			 assertEqual( user.getReferrals(), 1);
 			 
 			 assertEqual( gym.getUsers(), {user, user2});
 	);
@@ -55,18 +55,18 @@ operations
 			 dcl user:Member := new TestUser().newMember();
 			 
 			 --number of users is 0
-			 assertTrue( card gym.getUsers() = 0);
+			 assertEqual( card gym.getUsers(), 0);
 			 
 			 assertTrue( not gym.userExists(user));
-			 assertTrue( gym.addUser(user) );
+			 assertTrue( gym.addUser(user));
 			 assertTrue( gym.userExists(user));
 			 
 			 --number of users is 1
-			 assertTrue( card gym.getUsers() = 1);
+			 assertEqual( card gym.getUsers(), 1);
 			 
 			 -- not add the user again
-			 assertTrue( gym.addUser(user) = false );
-			 assertTrue( card gym.getUsers() = 1); 		 
+			 assertEqual( gym.addUser(user), false);
+			 assertEqual( card gym.getUsers(), 1);
 	);
 	
 	--Test add user with the same ID TODO
@@ -196,9 +196,9 @@ operations
 		
 		 dcl gym:PerfectGym := newGym();
 		 dcl user:Member := new TestUser().newMember(); 
-		 assertTrue( gym.addUser(user) );
+		 assertTrue( gym.addUser(user));
 		 assertTrue( gym.userExists(user));
-		 assertTrue( gym.getLoggedUser() = nil); 
+		 assertEqual( gym.getLoggedUser(), nil); 
 		 assertTrue( gym.loginMember(user.getNumber(), user.getPassword()) = true);
 		 assertEqual( gym.getLoggedUser(), user); 
 	 	 gym.logoutMember();
@@ -213,15 +213,15 @@ operations
 	   dcl gym:PerfectGym := newGym(); 
 		 dcl user:Member := new TestUser().newMember(); 
 		 
-		 assertTrue( gym.getLoggedUser() = nil); 
-		 assertTrue( gym.loginMember(user.getNumber(), user.getPassword()) = false);	--user not registed
-		 assertTrue( gym.getLoggedUser() = nil); 
+		 assertEqual( gym.getLoggedUser(), nil); 
+		 assertEqual( gym.loginMember(user.getNumber(), user.getPassword()), false);	--user not registed
+		 assertEqual( gym.getLoggedUser(), nil); 
 		 
-		 assertTrue( gym.addUser(user) );
+		 assertTrue( gym.addUser(user));
 		 assertTrue( gym.userExists(user));
 
-		 assertTrue( gym.loginMember(user.getNumber(), "wrongPassword") = false);			--wrong combination
-		 assertTrue( gym.getLoggedUser() = nil); 
+		 assertEqual( gym.loginMember(user.getNumber(), "wrongPassword"), false);			--wrong combination
+		 assertEqual( gym.getLoggedUser(), nil); 
 	 
 	);
 	
@@ -235,18 +235,18 @@ operations
 		dcl gclass1:GymClass := new GymClass("cycling", "cycling class", 10, prof, <Monday>, mk_GymClass`Time(15,20), 90);
 		dcl user:Member := new TestUser().newMember(); 
 		
-		assertTrue( gym.addUser(user) );
-		assertTrue( gym.addUser(prof) );
-		gym.addClass( gclass1 ); 
+		assertTrue( gym.addUser(user));
+		assertTrue( gym.addUser(prof));
+		gym.addClass( gclass1); 
 		
 		
 		-- 1. login user
-		assertTrue( gym.getLoggedUser() = nil); 
-		assertTrue( gym.loginMember(user.getNumber(), user.getPassword()) = true);
+		assertEqual( gym.getLoggedUser(), nil); 
+		assertEqual( gym.loginMember(user.getNumber(), user.getPassword()), true);
 		assertEqual( gym.getLoggedUser(), user);
 		
 		-- 2. enroll in gym class
-		gym.enrollGymClass(user, gclass1);
+		gym.enrollGymClass( user, gclass1);
 		
 		assertEqual( gclass1.getParticipants(), {user});
 		assertEqual( gym.getClasses(user), {gclass1});
@@ -263,15 +263,15 @@ operations
 		dcl gclass2:GymClass := new GymClass("fit", "fit class", 10, prof, <Tuesday>, mk_GymClass`Time(07,20), 90);
 		
 		dcl user:Member := new TestUser().newMember(); 
-		assertTrue( gym.addUser(user) );
-		assertTrue( gym.addUser(prof) );
-		gym.addClass( gclass1 ); 
-		gym.addClass( gclass2 );
+		assertTrue( gym.addUser(user));
+		assertTrue( gym.addUser(prof));
+		gym.addClass( gclass1); 
+		gym.addClass( gclass2);
 		
 		
 		-- 1. login user
-		assertTrue( gym.getLoggedUser() = nil); 
-		assertTrue( gym.loginMember(user.getNumber(), user.getPassword()) = true);
+		assertEqual( gym.getLoggedUser(), nil); 
+		assertEqual( gym.loginMember(user.getNumber(), user.getPassword()), true);
 		assertEqual( gym.getLoggedUser(), user);
 		
 		-- 2. enroll in gym classes
@@ -299,12 +299,12 @@ operations
 		dcl gclass1:GymClass := new GymClass("cycling", "cycling class", 10, prof, <Monday>, mk_GymClass`Time(15,20), 90);
 		dcl gclass2:GymClass := new GymClass("fit", "fit class", 10, prof, <Tuesday>, mk_GymClass`Time(07,20), 90);
 	
-		assertTrue( gym.addUser(prof) );
-		gym.addClass( gclass1 ); 
-		gym.addClass( gclass2 );
+		assertTrue( gym.addUser(prof));
+		gym.addClass( gclass1); 
+		gym.addClass( gclass2);
 		
 		assertEqual(gym.getClasses(prof), {gclass1, gclass2});
- 		
+		
 	);
 	
 	-- Test fail enroll class
@@ -317,12 +317,12 @@ operations
  
 		dcl user:Member := new TestUser().newMember(); 
 		
-		assertTrue( gym.addUser(user) );
-		assertTrue( gym.addUser(prof) );
+		assertTrue( gym.addUser(user));
+		assertTrue( gym.addUser(prof));
 		
 		-- 1. login user
-		assertTrue( gym.getLoggedUser() = nil); 
-		assertTrue( gym.loginMember(user.getNumber(), user.getPassword()) = true);
+		assertEqual( gym.getLoggedUser(), nil); 
+		assertEqual( gym.loginMember(user.getNumber(), user.getPassword()), true);
 		assertEqual( gym.getLoggedUser(), user);
 		
 		-- 2. enroll in gym classes
@@ -331,10 +331,9 @@ operations
 	 	gym.logoutMember();
 	 	assertEqual( gym.getLoggedUser(), nil); 
  		
- 		gym.addClass( gclass1 ); 
+ 		gym.addClass( gclass1); 
  		gym.enrollGymClass(user, gclass1);				-- breaks precondition (user not logged in)
- 
- 		
+ 		 		
 	);
 	
 	-- Test add training plan
@@ -347,14 +346,14 @@ operations
  
 		dcl exercise1:Exercise:= new Exercise(4, 10, <Leg>, "leg workout");
 		dcl exercise2:Exercise:= new Exercise(2, 15, <Arm>, "arm workout");
-		dcl plan:Plan := new Plan([exercise1, exercise2]);
+		dcl plan:Plan := new Plan([exercise1, exercise2], prof);
 	 
-		assertTrue( gym.addUser(user) );
-		assertTrue( gym.addUser(prof) );
+		assertTrue( gym.addUser(user));
+		assertTrue( gym.addUser(prof));
 		
 		-- 1. login prof
-		assertTrue( gym.getLoggedUser() = nil); 
-		assertTrue( gym.loginMember(prof.getNumber(), prof.getPassword()) = true);
+		assertEqual( gym.getLoggedUser(), nil); 
+		assertEqual( gym.loginMember(prof.getNumber(), prof.getPassword()), true);
 		assertEqual( gym.getLoggedUser(), prof);
 		
 		-- 2. add that training plan to the user
@@ -363,7 +362,7 @@ operations
 		-- 3. user check the training plan
 	 	gym.logoutMember();
 	 	assertEqual( gym.getLoggedUser(), nil); 
- 		assertTrue( gym.loginMember(user.getNumber(), user.getPassword()) = true);
+ 		assertEqual( gym.loginMember(user.getNumber(), user.getPassword()), true);
  		assertEqual( gym.getLoggedUser(), user);
  		
  		assertEqual(gym.getPlan(user), plan);
@@ -381,15 +380,15 @@ operations
  		
 		dcl exercise1:Exercise:= new Exercise(4, 10, <Leg>, "leg workout");
 		dcl exercise2:Exercise:= new Exercise(2, 15, <Arm>, "arm workout");
-		dcl plan:Plan := new Plan([exercise1, exercise2]);
+		dcl plan:Plan := new Plan([exercise1, exercise2], prof);
 	 
-		assertTrue( gym.addUser(user) );
-		assertTrue( gym.addUser(user2) );
-		assertTrue( gym.addUser(prof) );
+		assertTrue( gym.addUser(user));
+		assertTrue( gym.addUser(user2));
+		assertTrue( gym.addUser(prof));
 		
 		-- user login
 		assertEqual( gym.getLoggedUser(), nil); 
- 		assertTrue( gym.loginMember(user.getNumber(), user.getPassword()) = true);
+ 		assertEqual( gym.loginMember(user.getNumber(), user.getPassword()), true);
  		assertEqual( gym.getLoggedUser(), user);
 		
 		-- add that training plan to the user

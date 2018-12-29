@@ -268,7 +268,7 @@ operations
 
 	-- Create a training plan for a member
 	public createTrainingPlan: Professor * Member * Plan ==> ()
-	createTrainingPlan(professor, member, plan) == (	--TODO guardar o pt do user ? 
+	createTrainingPlan(professor, member, plan) == (
 		 member.addTrainingPlan(plan);
 	)
 	pre getLoggedUser() = professor and userExists(member)
