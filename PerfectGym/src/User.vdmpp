@@ -29,9 +29,6 @@ instance variables
 	--User's password
 	protected password: seq of char;
 	
-	--User's referral
-	protected referral: int;
-	
 operations
 
 	-- Constructor
@@ -46,7 +43,6 @@ operations
 	  id := id +1;
 	  mobile := nil;
 	  password := pass;
-	  referral := 0;
 	)
 	
 	pre len mail >= 5 
@@ -96,17 +92,5 @@ operations
 	setMobile(m) == (
 		mobile:=m
 	);
-	
-	-- Returns the user's referrals
-	public getReferrals: () ==> int
-	getReferrals() ==
-		return referral;
-	
-	-- Increase user's referrals
-	public setReferrals: () ==> ()
-	setReferrals() == (
-		referral := referral + 1;
-	);
-	
 	
 end User

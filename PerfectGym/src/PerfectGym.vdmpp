@@ -105,7 +105,7 @@ operations
  	post ( RESULT = true and users = users~ munion { u.getNumber() |-> u } ) or ( RESULT = false and users = users~ );	
  	
  	-- Add a user if there is no user with the same membership number and has referral
- 	public addUserReferral : User * User ==> bool
+ 	public addUserReferral : Member * User ==> bool
  	addUserReferral(r,u) == (
  		
  		if( not userRegisted(u.getNumber())) then (

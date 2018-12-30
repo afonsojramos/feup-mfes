@@ -12,22 +12,28 @@ instance variables
 	
 	-- Member's height
 	private height: real;
- 
+	
 	inv weight > 0 and height > 0;
 	
-	-----
-	-- mensalidade?? TODO consoante idade  ter plano Jovem, senior e isso; invariante
-	-----
-	
+	--User's referral
+	protected referral: int;
+
+	-- Member's birth year
+	private birthYear: real;
+ 
+	inv birthYear > 0;
 	
 operations
 
 	-- Constructor
-	public Member : seq of char * seq of char * seq of char * Gender * real * real * seq of char ==> Member
-	Member (fName, lName, mail, g, w, h, pass) == (
+	public Member : seq of char * seq of char * seq of char * Gender * real * real * real * seq of char ==> Member
+	Member (fName, lName, mail, g, year, w, h, pass) == (
+		
 		
 		weight:= w;
 		height:= h;
+		birthYear:= year;
+		referral := 0;
 		User(fName, lName, mail, g, pass);
 		
 	)
@@ -53,5 +59,16 @@ operations
 	-- Get member height
 	public getHeight: () ==> real
 	getHeight() == return height;		
+	
+		-- Returns the user's referrals
+	public getReferrals: () ==> int
+	getReferrals() ==
+		return referral;
+	
+	-- Increase user's referrals
+	public setReferrals: () ==> ()
+	setReferrals() == (
+		referral := referral + 1;
+	);
 	
 end Member

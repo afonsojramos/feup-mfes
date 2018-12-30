@@ -5,12 +5,12 @@ operations
 	--Creates a new member
 	public newMember: () ==> Member
 	newMember() == (
-		return new Member("Cláudia", "Rodrigues", "up201508262@fe.up.pt", <Feminine>, 50, 1.67, "qwerty1234");
+		return new Member("Cláudia", "Rodrigues", "up201508262@fe.up.pt", <Feminine>, 1997, 50, 1.67, "qwerty1234");
 	);
 	
 	public newMember2: () ==> Member
 	newMember2() == (
-		return new Member("Afonso", "Ramos", "up201506239@fe.up.pt", <Masculine>, 75, 1.91, "qwerty1234");
+		return new Member("Afonso", "Ramos", "up201506239@fe.up.pt", <Masculine>, 1997, 75, 1.91, "qwerty1234");
 	);
 	
 	--Creates a new professor
