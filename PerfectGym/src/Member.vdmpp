@@ -16,7 +16,7 @@ instance variables
 	inv weight > 0 and height > 0;
 	
 	--User's referral
-	protected referral: int;
+	private referral: int;
 
 	-- Member's birth year
 	private birthYear: real;
@@ -60,7 +60,7 @@ operations
 	public getHeight: () ==> real
 	getHeight() == return height;		
 	
-		-- Returns the user's referrals
+	-- Returns the user's referrals
 	public getReferrals: () ==> int
 	getReferrals() ==
 		return referral;
