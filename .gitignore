@@ -1,3 +1,11 @@
 .metadata/
 .project
-generated/
+*.properties
+*.opt
+*.prj
+PerfectGym/generated/java/src/PerfectGym/**
+PerfectGym/generated/java/bin/
+PerfectGym/generated/java/lib/
+/PerfectGym/generated/java/.classpath
+!PerfectGym/generated/java/src/PerfectGym/Main.java
+!PerfectGym/generated/java/src/PerfectGym/CommandLineInterface.java
