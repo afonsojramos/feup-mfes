@@ -28,17 +28,14 @@ operations
 	-- Constructor
 	public Member : seq of char * seq of char * seq of char * Gender * real * real * real * seq of char ==> Member
 	Member (fName, lName, mail, g, year, w, h, pass) == (
-		
-		
+			
 		weight:= w;
 		height:= h;
 		birthYear:= year;
 		referral := 0;
 		User(fName, lName, mail, g, pass);
-		
 	)
 	pre w >0 and h > 0;
-
 
 	-- Set member's training plan
 	public addTrainingPlan: Plan ==> ()
@@ -50,11 +47,9 @@ operations
 	public pure getTrainingPlan: () ==> [Plan]
 	getTrainingPlan() == return trainingPlan;
 	
-	
 	-- Get member weight
 	public getWeight: () ==> real
 	getWeight() == return weight;
-	
 	
 	-- Get member height
 	public getHeight: () ==> real
@@ -69,6 +64,19 @@ operations
 	public setReferrals: () ==> ()
 	setReferrals() == (
 		referral := referral + 1;
+	);
+	
+	-- Get member's monthly due
+	public getMonthly: () ==> int
+	getMonthly() == (
+		dcl age:int := 2018 - birthYear;
+		dcl ageDiscount:int := 0;
+		dcl monthly:int;
+		
+		if age > 60 or age < 20
+			then (ageDiscount := 1);
+		monthly := floor (30 - 30 * getReferrals() / 30 - ageDiscount * 2/10 * 30);
+		return monthly;
 	);
 	
 end Member

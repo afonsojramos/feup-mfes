@@ -58,7 +58,6 @@ instance variables
  	-- No empty name or description
  	inv len name > 0 and len description > 0;
  
-	
 operations
 
  	-- constructor 
@@ -71,9 +70,7 @@ operations
 		date := dt;
 		time := tim;
 		duration := dur;
-		
 		availableSpace := capacity - 1; --professor
-		
 		return self
 	)
 	pre len className > 0 and len classDescription > 0;
@@ -170,6 +167,5 @@ operations
 	getProfessor() == (
 		return professor;
 	);
- 
-	  		
+   		
 end GymClass

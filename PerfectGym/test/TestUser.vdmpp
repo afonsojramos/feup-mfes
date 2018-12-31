@@ -10,7 +10,17 @@ operations
 	
 	public newMember2: () ==> Member
 	newMember2() == (
-		return new Member("Afonso", "Ramos", "up201506239@fe.up.pt", <Masculine>, 1997, 75, 1.91, "qwerty1234");
+		return new Member("Afonso", "Ramos", "up201506239@fe.up.pt", <Masculine>, 1950, 75, 1.91, "qwerty1234");
+	);
+	
+	public newMember3: () ==> Member
+	newMember3() == (
+		return new Member("Carlos", "Freitas", "carlos@fe.up.pt", <Masculine>, 1997, 60, 1.51, "qwerty1234");
+	);
+	
+	public newMember4: () ==> Member
+	newMember4() == (
+		return new Member("Pedro", "Sousa", "pedro@fe.up.pt", <Masculine>, 1997, 70, 1.71, "qwerty1234");
 	);
 	
 	--Creates a new professor

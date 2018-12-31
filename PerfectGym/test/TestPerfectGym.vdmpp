@@ -32,19 +32,27 @@ operations
 	-- Test add user with referral
 	private addUserReferral: () ==> ()
 	addUserReferral() == (
+			dcl gym:PerfectGym := newGym();
+			dcl user:Member := new TestUser().newMember();
+			dcl user2:Member := new TestUser().newMember2();
+			dcl user3:Member := new TestUser().newMember3();
+			dcl user4:Member := new TestUser().newMember4();
 			 
-			 dcl gym:PerfectGym := newGym();
-			 dcl user:Member := new TestUser().newMember();
-			 dcl user2:Member := new TestUser().newMember2();
+			assertTrue( not gym.userExists(user));
+			assertTrue( gym.addUser(user));
+			assertTrue( gym.addUserReferral(user, user2));
+			assertTrue( gym.userExists(user));
+			assertTrue( gym.userExists(user2));
+			assertEqual( user.getReferrals(), 1);
+			assertTrue( gym.addUserReferral(user, user3));
+			assertTrue( gym.addUserReferral(user, user4));
+			
+			-- Discount of 1$ per referral 
+			assertEqual( user.getMonthly(), 27);
+			-- Discount of 20% due to age
+			assertEqual( user2.getMonthly(), 24);
 			 
-			 assertTrue( not gym.userExists(user));
-			 assertTrue( gym.addUser(user));
-			 assertTrue( gym.addUserReferral(user, user2));
-			 assertTrue( gym.userExists(user));
-			 assertTrue( gym.userExists(user2));
-			 assertEqual( user.getReferrals(), 1);
-			 
-			 assertEqual( gym.getUsers(), {user, user2});
+			assertEqual( gym.getUsers(), {user, user2, user3, user4});
 	);
 	
 	-- Test add repeated user

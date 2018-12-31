@@ -55,7 +55,6 @@ operations
  	pre len pass > 0 and len pass < 20 and loggedinUser = nil	         -- only one user at a time
   post ( RESULT = true and loggedinUser <> nil) or RESULT = false;
  
- 
  	-- Log out member
  	public logoutMember: () ==> ()
  	logoutMember() == loggedinUser := nil
@@ -68,8 +67,7 @@ operations
  	getLoggedUser() == (
  			return loggedinUser;
  	);
- 	 
- 	 
+ 	  
  	-- Get users
  	public getUsers: () ==> set of User
  	getUsers() == (
@@ -144,7 +142,6 @@ operations
 		return false;
 	);
 	
-	
 	-- Add a class if there is no class with the same name
 	public addClass: GymClass ==> ()
 	addClass (gclass) == (
@@ -214,7 +211,6 @@ operations
 		return result;
 	);
 	
-	
  	---------------------------------------------------------------------
  	------------------ When the member is logged in ---------------------
  	---------------------------------------------------------------------
@@ -260,8 +256,6 @@ operations
 	)
 	pre getLoggedUser() = member;
 	
-	
-	
  	---------------------------------------------------------------------
  	------------------ When the professor is logged in ---------------------
  	---------------------------------------------------------------------
@@ -274,6 +268,4 @@ operations
 	pre getLoggedUser() = professor and userExists(member)
 	post member.getTrainingPlan() = plan;
  
-  
-
 end PerfectGym
