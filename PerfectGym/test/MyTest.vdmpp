@@ -1,4 +1,4 @@
-class Test
+class MyTest
 operations
 	
 	-- Simulates assertion checking by reducing it to pre-condition checking.
@@ -22,4 +22,4 @@ operations
 		)
 	post expected = actual
 
-end Test
+end MyTest

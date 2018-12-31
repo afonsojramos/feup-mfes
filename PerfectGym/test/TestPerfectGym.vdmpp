@@ -1,4 +1,4 @@
-class TestPerfectGym is subclass of Test
+class TestPerfectGym is subclass of MyTest
  
 operations
  

@@ -1,4 +1,4 @@
-class TestGymClass is subclass of Test
+class TestGymClass is subclass of MyTest
 types
 operations
 	

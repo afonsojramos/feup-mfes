@@ -1,4 +1,4 @@
-class TestPlan is subclass of Test
+class TestPlan is subclass of MyTest
 types
 operations
  

@@ -1,4 +1,4 @@
-class Main is subclass of Test
+class Main is subclass of MyTest
 types
 operations
 

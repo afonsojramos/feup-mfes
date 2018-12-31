@@ -1,4 +1,4 @@
-class TestExercise is subclass of Test
+class TestExercise is subclass of MyTest
 types
 operations
  
