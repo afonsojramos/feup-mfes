@@ -1,12 +1,7 @@
 package PerfectGym;
 
-import PerfectGym.*;
-import org.overture.codegen.runtime.*;
-
-import java.text.ParseException;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
 
@@ -28,7 +23,7 @@ public class CommandLineInterface {
 
         while (true) {
             mainMenuEntries.clear();
-            addMainMenuEntries(mainMenuEntries);
+            getMainMenuEntries(mainMenuEntries);
             printEntries(mainMenuEntries);
             int option = getUserInput(1, mainMenuEntries.size() - 1);
 
@@ -40,7 +35,7 @@ public class CommandLineInterface {
         }
     }
 
-    private void addMainMenuEntries(ArrayList<SimpleEntry<String, Callable<Void>>> mainMenuEntries) {
+    private void getMainMenuEntries(ArrayList<SimpleEntry<String, Callable<Void>>> mainMenuEntries) {
         if (perfectGym.getLoggedUser() == null) {
             mainMenuEntries.add(new SimpleEntry<>("Create Account", () -> {
                 createAccountMenu();
@@ -103,6 +98,39 @@ public class CommandLineInterface {
             System.out.println("Incorrect Membership Number, Password combination. Please try again.");
         }
         printEmptyLines(EMPTY_LINES);
+    }
+
+    private void loggedInMenu() {
+        printEmptyLines(EMPTY_LINES);
+        printLine();
+        System.out.println("Logged In Menu");
+        ArrayList<SimpleEntry<String, Callable<Void>>> loggedInMenuEntries = new ArrayList<>();
+
+        while (true) {
+            loggedInMenuEntries.clear();
+            getLoggedInMenuEntries(loggedInMenuEntries);
+            printEntries(loggedInMenuEntries);
+            int option = getUserInput(1, loggedInMenuEntries.size() - 1);
+
+            try {
+                loggedInMenuEntries.get(option).getValue().call();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void getLoggedInMenuEntries(ArrayList<SimpleEntry<String, Callable<Void>>> loggedInMenuEntries) {
+        if (perfectGym.getLoggedUser() != null) {
+            loggedInMenuEntries.add(new SimpleEntry<>("Logout", () -> {
+                perfectGym.logoutMember();
+                printEmptyLines(EMPTY_LINES);
+                mainMenu();
+                return null;
+            }));
+        } else {
+            mainMenu();
+        }
     }
 
     private void printLine() {

@@ -1,23 +1,12 @@
 package PerfectGym;
 
-import java.util.*;
-import org.overture.codegen.runtime.*;
-
 @SuppressWarnings("all")
-public class Main extends Test {
-  public static void main() {
+public class Main {
+  public static void main(String[] args) {
+    PerfectGym perfectGym = new PerfectGym();
+    
+    CommandLineInterface cli = new CommandLineInterface(perfectGym);
+    cli.mainMenu();
 
-    new TestUser().test();
-    new TestPerfectGym().test();
-    new TestGymClass().test();
-    new TestExercise().test();
-    new TestPlan().test();
-  }
-
-  public Main() {}
-
-  public String toString() {
-
-    return "Main{}";
   }
 }
