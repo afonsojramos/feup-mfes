@@ -9,3 +9,4 @@ PerfectGym/generated/java/lib/
 /PerfectGym/generated/java/.classpath
 !PerfectGym/generated/java/src/PerfectGym/Main.java
 !PerfectGym/generated/java/src/PerfectGym/CommandLineInterface.java
+PerfectGym/.overture

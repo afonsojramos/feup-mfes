@@ -77,12 +77,6 @@ operations
 			 assertEqual( card gym.getUsers(), 1);
 	);
 	
-	--Test add user with the same ID TODO
-	-- 
-	-- 
-	-- 
-	
-	
 	-- Test add/remove classes
 	private addGymClass: () ==> ()
 	addGymClass() == (
@@ -100,8 +94,6 @@ operations
 		gym.removeClass(gclass); --remove
 		assertEqual(gym.getClasses(), {});
 	);
-	
-	
  
 	-- Add class with same name
 	private addGymClassSameName: () ==> ()
@@ -121,7 +113,6 @@ operations
 		
 		gym.addClass(gclass2); --breaks pre-condition 
 	);
-	
 	
 	-- Test gym schedule
 	private testGymClasses: () ==> ()
@@ -178,7 +169,6 @@ operations
 		
 	);
 	
-	
 	-- Test overlap classes
 	private gymClassesTimeOverlap: () ==> ()
 	gymClassesTimeOverlap() == (
@@ -196,7 +186,6 @@ operations
 		gym.addClass(gclass2);  --breaks pre condition
 		
 	);
- 
  
  	-- Test login
  	private testLogin: () ==> ()
@@ -232,7 +221,6 @@ operations
 		 assertEqual( gym.getLoggedUser(), nil); 
 	 
 	);
-	
 	
 	-- Test member add classes
 	public testAddGymClasses: () ==> ()
