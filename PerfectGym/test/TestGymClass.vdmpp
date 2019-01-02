@@ -5,9 +5,9 @@ operations
 	public newGymClass: () ==> GymClass
 	newGymClass() == (
 			dcl user:Professor := new TestUser().newProfessor();
-			return new GymClass("cycling", "cycling class", 10, user, <Monday>, mk_GymClass`Time(15,20), 90);
+			return new GymClass("cycling", <Cycling>, "cycling class", 10, user, <Monday>, mk_GymClass`Time(15,20), 90);
 	);
-	
+	 
 	-- Test create gym 
 	private createGymClass: () ==> ()
 	createGymClass() == (
@@ -16,6 +16,7 @@ operations
 		 
 		 	 -- get
 			 assertEqual(gclass.getName(), "cycling");
+			 assertEqual(gclass.getType(), <Cycling>);
 			 assertEqual(gclass.getDescription(), "cycling class");
 			 assertEqual(gclass.getDate(), <Monday>);
 			 assertEqual(gclass.getCapacity(), 10);

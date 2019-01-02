@@ -83,7 +83,7 @@ operations
 	
 		dcl gym:PerfectGym := newGym();
 		dcl user:Professor := new TestUser().newProfessor();
-		dcl gclass:GymClass := new GymClass("cycling", "cycling class", 10, user, <Monday>, mk_GymClass`Time(15,20), 90);
+		dcl gclass:GymClass := new GymClass("cycling", <Cycling>, "cycling class", 10, user, <Monday>, mk_GymClass`Time(15,20), 90);
 		assertTrue (gym.addUser(user));
  
 		assertEqual(gym.getClasses(), {});
@@ -101,11 +101,10 @@ operations
 		
 		dcl gym:PerfectGym := newGym();
 		dcl user:Professor := new TestUser().newProfessor();
-		dcl gclass1:GymClass := new GymClass("cycling", "cycling class", 10, user, <Monday>, mk_GymClass`Time(15,20), 90);
-		dcl gclass2:GymClass := new GymClass("cycling", "fit class", 10, user, <Monday>, mk_GymClass`Time(08,20), 90);		
+		dcl gclass1:GymClass := new GymClass("cycling", <Cycling>, "cycling class", 10, user, <Monday>, mk_GymClass`Time(15,20), 90);
+		dcl gclass2:GymClass := new GymClass("cycling", <Cycling>, "fit class", 10, user, <Monday>, mk_GymClass`Time(08,20), 90);		
 		assertTrue (gym.addUser(user));
 		
- 
 		assertEqual(gym.getClasses(), {});
 		
 		gym.addClass(gclass1); --add
@@ -120,8 +119,8 @@ operations
 		
 		dcl gym:PerfectGym := newGym();
 		dcl user:Professor := new TestUser().newProfessor();
-		dcl gclass1:GymClass:= new GymClass("cycling", "cycling class", 10, user, <Monday>, mk_GymClass`Time(15,20), 90);
-		dcl gclass2:GymClass:= new GymClass("fit", "fit class", 10, user, <Monday>, mk_GymClass`Time(08,20), 90);		
+		dcl gclass1:GymClass:= new GymClass("cycling",<Cycling>, "cycling class", 10, user, <Monday>, mk_GymClass`Time(15,20), 90);
+		dcl gclass2:GymClass:= new GymClass("yoga", <Yoga>, "yoga class", 10, user, <Monday>, mk_GymClass`Time(08,20), 90);		
 		
 		assertTrue (gym.addUser(user));
  
@@ -139,10 +138,12 @@ operations
 		
 		dcl gym:PerfectGym := newGym();
 		dcl user:Professor := new TestUser().newProfessor();
-		dcl gclass1:GymClass:= new GymClass("cycling", "cycling class", 10, user, <Monday>, mk_GymClass`Time(15,20), 90);
-		dcl gclass2:GymClass := new GymClass("fit", "fit class", 10, user, <Monday>, mk_GymClass`Time(08,20), 90);		
-		dcl gclass3:GymClass:= new GymClass("jump", "jump class", 10, user, <Monday>, mk_GymClass`Time(20,30), 90);	
-		dcl gclass4:GymClass := new GymClass("airfit", "fit class", 10, user, <Saturday>, mk_GymClass`Time(09,40), 60);	
+		dcl gclass1:GymClass:= new GymClass("cycling", <Cycling>, "cycling class", 10, user, <Monday>, mk_GymClass`Time(15,20), 90);
+		dcl gclass5:GymClass:= new GymClass("bodyattack", <BodyAttack>, "bodyattack class", 10, user, <Tuesday>, mk_GymClass`Time(15,20), 90);
+		dcl gclass2:GymClass := new GymClass("yoga", <Yoga>, "yoga class", 10, user, <Monday>, mk_GymClass`Time(08,20), 90);		
+		dcl gclass3:GymClass:= new GymClass("zumba", <Zumba>, "zumba class", 10, user, <Monday>, mk_GymClass`Time(20,30), 90);	
+		dcl gclass4:GymClass := new GymClass("cycling2", <Cycling>, "cycling class", 10, user, <Saturday>, mk_GymClass`Time(09,40), 60);	
+		dcl gclass6:GymClass:= new GymClass("cycling3", <Cycling>, "cycling class", 10, user, <Monday>, mk_GymClass`Time(06,50), 90);
 		dcl schedule: map GymClass`Day_week to seq of GymClass;
 		
 		assertTrue (gym.addUser(user));
@@ -158,16 +159,25 @@ operations
 		gym.addClass(gclass2);  
 		gym.addClass(gclass3); 
 		gym.addClass(gclass4); 
+		gym.addClass(gclass5); 
 	
 		schedule:= gym.getSchedule();
 		
 		--ordered schedule
-		assertEqual(gym.getClasses(), {gclass1, gclass2, gclass3, gclass4});
+		assertEqual(gym.getClasses(), {gclass1, gclass2, gclass3, gclass4, gclass5});
 		
 		assertEqual(gym.getSchedule(<Monday>), {<Monday>|->[gclass2, gclass1, gclass3]});
-		assertEqual(schedule, {<Monday>|->[gclass2, gclass1, gclass3], <Saturday>|->[gclass4]});
+		assertEqual(schedule, {<Monday>|->[gclass2, gclass1, gclass3], <Saturday>|->[gclass4], <Tuesday>|->[gclass5]});
+		
+		-- class shedule 
+		assertEqual(gym.getSchedule2(<Cycling>), {<Monday>|->[ mk_GymClass`Time(15,20)], <Saturday>|->[ mk_GymClass`Time(09,40)] });
+		gym.addClass(gclass6); 
+		assertEqual(gym.getSchedule2(<Cycling>), {<Monday>|->[ mk_GymClass`Time(06,50), mk_GymClass`Time(15,20)], <Saturday>|->[ mk_GymClass`Time(09,40)] });
+		assertEqual(gym.getSchedule2(<BodyAttack>), {<Tuesday>|->[ mk_GymClass`Time(15,20)] });
+		assertEqual(gym.getSchedule2(<RPM>), {|->});
 		
 	);
+		
 	
 	-- Test overlap classes
 	private gymClassesTimeOverlap: () ==> ()
@@ -175,8 +185,8 @@ operations
 		
 		dcl gym:PerfectGym := newGym();
 		dcl user:Professor := new TestUser().newProfessor();
-		dcl gclass1:GymClass:= new GymClass("cycling", "cycling class", 10, user, <Monday>, mk_GymClass`Time(15,20), 90);
-		dcl gclass2:GymClass:= new GymClass("fit", "fit class", 10, user, <Monday>, mk_GymClass`Time(16,49), 90);		 	
+		dcl gclass1:GymClass:= new GymClass("cycling",  <Cycling>, "cycling class", 10, user, <Monday>, mk_GymClass`Time(15,20), 90);
+		dcl gclass2:GymClass:= new GymClass("yoga", <Yoga>, "yoga class", 10, user, <Monday>, mk_GymClass`Time(16,49), 90);		 	
 		
 		assertTrue (gym.addUser(user));
 		
@@ -228,7 +238,7 @@ operations
 	
 	  dcl gym:PerfectGym := newGym();
 		dcl prof:Professor := new TestUser().newProfessor();
-		dcl gclass1:GymClass := new GymClass("cycling", "cycling class", 10, prof, <Monday>, mk_GymClass`Time(15,20), 90);
+		dcl gclass1:GymClass := new GymClass("cycling", <Cycling>, "cycling class", 10, prof, <Monday>, mk_GymClass`Time(15,20), 90);
 		dcl user:Member := new TestUser().newMember(); 
 		
 		assertTrue( gym.addUser(user));
@@ -255,8 +265,8 @@ operations
 	
 	  dcl gym:PerfectGym := newGym();
 		dcl prof:Professor := new TestUser().newProfessor();
-		dcl gclass1:GymClass := new GymClass("cycling", "cycling class", 10, prof, <Monday>, mk_GymClass`Time(15,20), 90);
-		dcl gclass2:GymClass := new GymClass("fit", "fit class", 10, prof, <Tuesday>, mk_GymClass`Time(07,20), 90);
+		dcl gclass1:GymClass := new GymClass("cycling", <Cycling>, "cycling class", 10, prof, <Monday>, mk_GymClass`Time(15,20), 90);
+		dcl gclass2:GymClass := new GymClass("cycling2",<Cycling>, "cycling class", 10, prof, <Tuesday>, mk_GymClass`Time(07,20), 90);
 		
 		dcl user:Member := new TestUser().newMember(); 
 		assertTrue( gym.addUser(user));
@@ -292,8 +302,8 @@ operations
 	
 	  dcl gym:PerfectGym := newGym();
 		dcl prof:Professor := new TestUser().newProfessor();
-		dcl gclass1:GymClass := new GymClass("cycling", "cycling class", 10, prof, <Monday>, mk_GymClass`Time(15,20), 90);
-		dcl gclass2:GymClass := new GymClass("fit", "fit class", 10, prof, <Tuesday>, mk_GymClass`Time(07,20), 90);
+		dcl gclass1:GymClass := new GymClass("cycling", <Cycling>, "cycling class", 10, prof, <Monday>, mk_GymClass`Time(15,20), 90);
+		dcl gclass2:GymClass := new GymClass("cycling2", <Cycling>, "cycling class", 10, prof, <Tuesday>, mk_GymClass`Time(07,20), 90);
 	
 		assertTrue( gym.addUser(prof));
 		gym.addClass( gclass1); 
@@ -309,7 +319,7 @@ operations
 		
 		dcl gym:PerfectGym := newGym();
 		dcl prof:Professor := new TestUser().newProfessor();
-		dcl gclass1:GymClass := new GymClass("cycling", "cycling class", 10, prof, <Monday>, mk_GymClass`Time(15,20), 90);
+		dcl gclass1:GymClass := new GymClass("cycling",<Cycling>, "cycling class", 10, prof, <Monday>, mk_GymClass`Time(15,20), 90);
  
 		dcl user:Member := new TestUser().newMember(); 
 		
@@ -404,7 +414,7 @@ operations
 		 addRepeatedUser();
 		 addGymClass();
 		 testGymClasses();
-		 testGymSchedule();
+		 testGymSchedule(); 
 		 testLogin();
 		 testFailedLogin();
 		 testAddGymClasses();

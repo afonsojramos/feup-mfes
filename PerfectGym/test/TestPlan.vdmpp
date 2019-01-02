@@ -45,11 +45,11 @@ operations
 			 plan := new Plan(series, prof); 			--breaks precondition
 			 
 			 plan := new Plan([exercise1], prof);
-			 plan.addExercise(exercise1);		--breaks precondition
+			 plan.addExercise(exercise1);					--breaks precondition
 	);
 	
 	
- -- Test add exercises
+ 	-- Test add exercises
 	private addExercises: () ==> ()
 	addExercises() == (
 			 
@@ -92,14 +92,15 @@ operations
 			 
 			 plan.removeExercise(exercise1);
 			 
-			 --remove 1st element (can be changed to other element)
+			 --remove 1st element 
 			 assertEqual(plan.getExercises(), [exercise3, exercise2]); 
 			 
 			 plan.removeExercise(exercise2);
+			 assertEqual(plan.getExercises(), [exercise3]); 
+			 
 			 plan.removeExercise(exercise3);
 			 
 			 assertEqual(plan.getExercises(), []); 
-			 
 	);
 	
   

@@ -24,7 +24,7 @@ instance variables
 	protected membershipNumber : nat1;
  
 	--User's mobile
-	protected mobile: [int];
+	protected mobile: [nat1];
 	
 	--User's password
 	protected password: seq of char;
@@ -81,13 +81,13 @@ operations
 		
 		
 	-- Returns the user's mobile
-	public getMobile: () ==> int
+	public getMobile: () ==> [nat1]
 	getMobile() ==
 		return mobile;
 		
 		
 	-- Set mobile 
-	public setMobile: int ==> ()
+	public setMobile: nat1 ==> ()
 	setMobile(m) == (
 		mobile:=m
 	);

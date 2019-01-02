@@ -193,6 +193,40 @@ operations
 	 	return {day} <: getSchedule();
 	);
 	
+	
+	-- Get gym schedule of a class type
+	public getSchedule2: (GymClass`ClassType) ==> map GymClass`Day_week to seq of GymClass`Time
+	getSchedule2(type) == (
+	
+		dcl tmp: map GymClass`Day_week to seq of GymClass := getSchedule();
+		dcl result: map GymClass`Day_week to seq of GymClass`Time := {|->};
+		
+		--get times
+		
+		for all day in set dom tmp do(	
+			 
+			 dcl gclasses:seq of GymClass := tmp(day);
+			 dcl times:seq of GymClass`Time:= [];
+			 
+			 dcl i:nat1:=1;
+			 while i < len gclasses + 1 do(
+			 	
+			 	dcl gclass:GymClass := gclasses(i);	
+			 		
+			 	if(gclass.getType() = type) then(
+			 		times := times ^ [gclass.getTime()];
+			 	);
+			 	
+			 	i:= i +1;	
+			 );
+			 
+			 if(len times > 0) then
+			 result:= result ++ {day|->times};
+		);
+		 
+		return result;
+	);
+	
 	-- Get gym classes of a professor
 	public getClasses: Professor ==> set of GymClass
 	getClasses(prof) == (

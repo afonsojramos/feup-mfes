@@ -11,7 +11,7 @@ types
 	public Day_week = <Monday> | <Tuesday> | <Wednesday> | <Thursday> | <Friday> | <Saturday> | <Sunday>;
 	
 	-- Type of class
-	public ClassType = <Cycling> | <BodyCombat> | <BodyAttack> | <Yoga> | <Zumba> | <RPM> | <Step>;	--TODO
+	public ClassType = <Cycling> | <BodyCombat> | <BodyAttack> | <Yoga> | <Zumba> | <RPM> | <Step>;	 
 	
 	-- Time in the day
 	public Time:: hour : nat
@@ -31,6 +31,7 @@ instance variables
 	
 	--Name
 	private name: seq of char := [];
+	private type: ClassType;
 	
 	-- Description
 	private description: seq of char := [];
@@ -61,9 +62,10 @@ instance variables
 operations
 
  	-- constructor 
-	public GymClass : seq of char * seq of char * Capacity * Professor * Day_week * Time * Duration ==> GymClass
-	GymClass (className, classDescription, cap, prof, dt, tim, dur) == (
+	public GymClass : seq of char * ClassType* seq of char * Capacity * Professor * Day_week * Time * Duration ==> GymClass
+	GymClass (className, classType, classDescription, cap, prof, dt, tim, dur) == (
 		name := className;
+		type := classType;
 		description := classDescription;
 		capacity:= cap;
 		professor := prof;
@@ -80,6 +82,12 @@ operations
  	pure public getName : () ==> seq of char	
   getName () == (
   	return name;
+  );
+  
+  -- get the class type
+ 	public getType : () ==> ClassType
+  getType () == (
+  	return type;
   );
   	
 	-- set the class name

@@ -69,8 +69,14 @@ operations
 			assertTrue(user.getPassword() = "qwerty1234");
 			assertTrue(user.getGender() = <Masculine>);	
 			assertTrue(user.getNumber() = 3);	
+			
+			-- mobile test
+			assertEqual(user.getMobile(), nil);
+			user.setMobile(911111111);
+			assertEqual(user.getMobile(), 911111111);
+ 
 	);
-	 
+	
 	 
 	-- Runs all the tests associated with a user
 	public test: () ==> ()
@@ -79,7 +85,6 @@ operations
 		 memberTest();
 		 memberTest2();
 		 professorTest();
-		 
 	);
 
  
