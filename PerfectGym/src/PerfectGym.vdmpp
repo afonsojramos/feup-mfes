@@ -113,6 +113,7 @@ operations
  		); 
  		return false;
  	) 
+	pre userExists(r)
  	post ( RESULT = true and users = users~ munion { u.getNumber() |-> u } ) or ( RESULT = false and users = users~ );	
 
 
