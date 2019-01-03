@@ -124,8 +124,8 @@ operations
 	);
 	
 	-- Checks if there is a class with the same name
-	public pure classRegisted: GymClass ==> bool
-	classRegisted(gclass) == (
+	public pure classRegistered: GymClass ==> bool
+	classRegistered(gclass) == (
 		
 		dcl name: seq of char := gclass.getName();
 		for all gymclass in set classes do(
@@ -144,7 +144,7 @@ operations
 	addClass (gclass) == (
 		classes:= classes union {gclass};
 	)
-	pre gclass not in set classes and not classRegisted(gclass) and userExists(gclass.getProfessor()) and Utilities`overlapClasses(gclass, classes)= false
+	pre gclass not in set classes and not classRegistered(gclass) and userExists(gclass.getProfessor()) and Utilities`overlapClasses(gclass, classes)= false
 	post classes = classes~ union {gclass};
 	
 	

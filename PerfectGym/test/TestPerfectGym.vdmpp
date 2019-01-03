@@ -246,7 +246,7 @@ operations
 		 dcl user:Member := new TestUser().newMember(); 
 		 
 		 assertEqual( gym.getLoggedUser(), nil); 
-		 assertEqual( gym.loginMember(user.getNumber(), user.getPassword()), false);	--user not registed
+		 assertEqual( gym.loginMember(user.getNumber(), user.getPassword()), false);	--user not registered
 		 assertEqual( gym.getLoggedUser(), nil); 
 		 
 		 assertTrue( gym.addUser(user));
