@@ -77,6 +77,27 @@ operations
  
 	);
 	
+	-- Test 4
+	private memberEditTest: () ==> ()
+	memberEditTest() == (
+			
+			dcl user:Member := newMember3();
+			assertTrue(user.getName() = "Carlos Freitas"); 
+			assertTrue(user.getEmail() = "carlos@fe.up.pt");	
+			assertTrue(user.getPassword() = "qwerty1234");
+			assertTrue(user.getGender() = <Masculine>);	
+			assertTrue(user.getNumber() = 4);	
+			
+			assertTrue(user.getWeight() = 60);
+			assertTrue(user.getHeight() = 1.51);	
+			
+			user.setWeight(65);
+			user.setHeight(1.52);
+			
+			assertTrue(user.getWeight() = 65);
+			assertTrue(user.getHeight() = 1.52);	
+	);
+	
 	 
 	-- Runs all the tests associated with a user
 	public test: () ==> ()
@@ -85,6 +106,7 @@ operations
 		 memberTest();
 		 memberTest2();
 		 professorTest();
+		 memberEditTest();
 	);
 
  

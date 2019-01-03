@@ -19,14 +19,13 @@ instance variables
 	private referral: int;
 
 	-- Member's birth year
-	private birthYear: real;
+	private birthYear: nat1;
  
-	inv birthYear > 0;
 	
 operations
 
 	-- Constructor
-	public Member : seq of char * seq of char * seq of char * Gender * real * real * real * seq of char ==> Member
+	public Member : seq of char * seq of char * seq of char * Gender * nat1 * real * real * seq of char ==> Member
 	Member (fName, lName, mail, g, year, w, h, pass) == (
 			
 		weight:= w;
@@ -55,6 +54,16 @@ operations
 	public getHeight: () ==> real
 	getHeight() == return height;		
 	
+	-- Set member weight
+	public setWeight:real ==> ()
+	setWeight(w) ==  weight:=w
+		pre w > 0;
+	
+	-- Set member height
+	public setHeight: real ==> ()
+	setHeight(h) == height:= h
+	pre h > 0;		
+	
 	-- Returns the user's referrals
 	public getReferrals: () ==> int
 	getReferrals() ==
@@ -67,11 +76,11 @@ operations
 	);
 	
 	-- Get member's monthly due
-	public getMonthly: () ==> int
+	public getMonthly: () ==> nat
 	getMonthly() == (
-		dcl age:int := 2018 - birthYear;
-		dcl ageDiscount:int := 0;
-		dcl monthly:int;
+		dcl age:nat := 2018 - birthYear;
+		dcl ageDiscount:nat := 0;
+		dcl monthly:nat;
 		
 		if age > 60 or age < 20
 			then (ageDiscount := 1);

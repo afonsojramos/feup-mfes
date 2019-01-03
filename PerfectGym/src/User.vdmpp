@@ -44,7 +44,7 @@ operations
 	  mobile := nil;
 	  password := pass;
 	)
-	pre len mail >= 5 
+	pre len mail >= 5 and len mail < 50
 		and len fName > 0 and len fName < 20
 		and len pass > 0 and len pass < 20
 		and len lName > 0 and len lName < 20
