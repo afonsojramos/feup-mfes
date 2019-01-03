@@ -80,19 +80,16 @@ public class CommandLineInterface {
         System.out.print("Gender (Masculine, Feminine): ");
         String gender = reader.nextLine();
         perfectGym.addUser(new Member(firstName, lastName, email, gender, birthYear, weight, height, password));
+
         printEmptyLines(EMPTY_LINES);
-        System.out.println(perfectGym.getUsers());
-        System.out.println(perfectGym.getLoggedUser());
-        System.out.println(perfectGym.userRegistered(0));
-        System.out.println(perfectGym.userRegistered(1));
     }
 
     private void loginMenu() {
         printEmptyLines(EMPTY_LINES);
         printLine();
-        System.out.println("Login menu");
+        System.out.println("Login menu\n");
         System.out.print("Membership Number: ");
-        int number = Integer.parseUnsignedInt(reader.nextLine());
+        long number = Long.parseUnsignedLong(reader.nextLine());
         System.out.print("Password: ");
         String password = reader.nextLine();
         if (perfectGym.loginMember(number, password)) {
