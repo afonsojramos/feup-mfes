@@ -35,7 +35,7 @@ operations
  	public loginMember: nat1 * seq of char ==> bool
  	loginMember(membershipnumber, pass) == (
  		
- 		if(userRegisted(membershipnumber)) then (
+ 		if(userRegistered(membershipnumber)) then (
  			
  			dcl user:User := users(membershipnumber);
  			
@@ -71,8 +71,8 @@ operations
  	);
 
  	-- Checks if there is a user with a given membership number
- 	public userRegisted: nat1 ==> bool
- 	userRegisted(number) == (
+ 	public userRegistered: nat1 ==> bool
+ 	userRegistered(number) == (
  			return number in set dom users;
  	);
  	
@@ -86,7 +86,7 @@ operations
  	public addUser : User ==> bool
  	addUser(u) == (
  		
- 		if( not userRegisted(u.getNumber())) then (
+ 		if( not userRegistered(u.getNumber())) then (
  				
  				--add user 
  				users := users munion { u.getNumber() |-> u };
@@ -102,7 +102,7 @@ operations
  	public addUserReferral : Member * User ==> bool
  	addUserReferral(r,u) == (
  		
- 		if( not userRegisted(u.getNumber())) then (
+ 		if( not userRegistered(u.getNumber())) then (
  				
  				--add user 
  				users := users munion { u.getNumber() |-> u };

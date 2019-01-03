@@ -3,6 +3,7 @@
 *.properties
 *.opt
 *.prj
+PerfectGym/generated/coverage
 PerfectGym/generated/java/src/PerfectGym/**
 PerfectGym/generated/java/bin/
 PerfectGym/generated/java/lib/

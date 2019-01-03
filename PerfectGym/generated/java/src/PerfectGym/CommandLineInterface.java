@@ -81,6 +81,10 @@ public class CommandLineInterface {
         String gender = reader.nextLine();
         perfectGym.addUser(new Member(firstName, lastName, email, gender, birthYear, weight, height, password));
         printEmptyLines(EMPTY_LINES);
+        System.out.println(perfectGym.getUsers());
+        System.out.println(perfectGym.getLoggedUser());
+        System.out.println(perfectGym.userRegistered(0));
+        System.out.println(perfectGym.userRegistered(1));
     }
 
     private void loginMenu() {
@@ -91,7 +95,7 @@ public class CommandLineInterface {
         int number = Integer.parseUnsignedInt(reader.nextLine());
         System.out.print("Password: ");
         String password = reader.nextLine();
-        if (PerfectGym.loginMember(number, password)) {
+        if (perfectGym.loginMember(number, password)) {
             loggedInMenu();
         } else {
             printEmptyLines(EMPTY_LINES);
