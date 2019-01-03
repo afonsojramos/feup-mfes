@@ -29,6 +29,31 @@ operations
 			 assertEqual( gym.getUsers(), {user});
 	);
 	
+	-- Test edit user
+	private editUser: () ==> ()
+	editUser() == (
+			 
+			 dcl gym:PerfectGym := newGym();
+			 dcl user:Member := new TestUser().newMember();
+			 
+			 assertTrue( gym.addUser(user));
+			 assertTrue( gym.userExists(user));
+			 	
+			 --login
+			 assertTrue( gym.loginMember(user.getNumber(), user.getPassword()) = true);
+		 	 assertEqual( gym.getLoggedUser(), user); 
+		 
+			 assertTrue(user.getWeight() = 50);
+			 assertTrue(user.getHeight() = 1.67);	
+			 
+			 gym.editWeight(user, 51);
+			 gym.editHeight(user, 1.68);
+			 
+			 assertTrue(user.getWeight() = 51);
+			 assertTrue(user.getHeight() = 1.68);	
+			 
+	);
+	
 	-- Test add user with referral
 	private addUserReferral: () ==> ()
 	addUserReferral() == (
@@ -410,6 +435,7 @@ operations
 	 		
 	 	 createGym();
 		 addUser();
+		 editUser();
 		 addUserReferral();
 		 addRepeatedUser();
 		 addGymClass();

@@ -57,12 +57,14 @@ operations
 	-- Set member weight
 	public setWeight:real ==> ()
 	setWeight(w) ==  weight:=w
-		pre w > 0;
+		pre w > 0
+		post weight=w;
 	
 	-- Set member height
 	public setHeight: real ==> ()
 	setHeight(h) == height:= h
-	pre h > 0;		
+		pre h > 0
+		post height = h;	
 	
 	-- Returns the user's referrals
 	public getReferrals: () ==> int

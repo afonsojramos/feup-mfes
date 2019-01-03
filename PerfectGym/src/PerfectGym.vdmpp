@@ -287,6 +287,23 @@ operations
 	)
 	pre getLoggedUser() = member;
 	
+	
+	--Edit weight and height
+	
+	public editWeight:Member * real ==> ()
+	editWeight(m, w) ==  (
+		m.setWeight(w)
+	) 
+	pre getLoggedUser() = m;
+ 	
+ 	public editHeight:Member * real ==> ()
+	editHeight(m, h) ==  (
+		m.setHeight(h)
+	) 
+	pre getLoggedUser() = m;
+	
+ 
+	
  	---------------------------------------------------------------------
  	------------------ When the professor is logged in ---------------------
  	---------------------------------------------------------------------

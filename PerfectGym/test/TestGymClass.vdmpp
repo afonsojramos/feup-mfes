@@ -35,7 +35,7 @@ operations
 	addParticipants() == (
 			 
 			 dcl gclass:GymClass:= newGymClass();
-		 	 dcl user:User := new TestUser().newMember();
+		 	 dcl user:Member := new TestUser().newMember();
 			 
 		 	 assertEqual(card gclass.getParticipants(), 0);     --no participants
 		 	 assertEqual(gclass.getParticipants(), {});
@@ -79,7 +79,7 @@ operations
 	addSameParticipant() == (
 			 
 			 dcl gclass:GymClass:= newGymClass();
-		 	 dcl user:User := new TestUser().newMember();
+		 	 dcl user:Member := new TestUser().newMember();
 
 		 	 --add a participant
 			 gclass.addParticipant(user);
@@ -94,7 +94,7 @@ operations
 	removeNonExistingParticipant() == (
 			 
 			 dcl gclass:GymClass:= newGymClass();
-		 	 dcl user:User := new TestUser().newMember();
+		 	 dcl user:Member := new TestUser().newMember();
 			 gclass.removeParticipant(user); 		-- breaks pre-condition
 	);
 	
@@ -112,7 +112,7 @@ operations
 		 	
 		 	 -- add 9 participants
 		 	 while i<9 do(
-		 	 	 dcl user:User := new TestUser().newMember();
+		 	 	 dcl user:Member := new TestUser().newMember();
 		 	 	 gclass.addParticipant(user);
 		 	 	 i:= i+1;
 		 	);	
