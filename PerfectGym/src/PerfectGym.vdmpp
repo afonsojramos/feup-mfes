@@ -144,7 +144,10 @@ operations
 	addClass (gclass) == (
 		classes:= classes union {gclass};
 	)
-	pre gclass not in set classes and not classRegistered(gclass) and userExists(gclass.getProfessor()) and Utilities`overlapClasses(gclass, classes)= false
+	pre gclass not in set classes 
+		and not classRegistered(gclass) 
+		and userExists(gclass.getProfessor()) 
+		and Utilities`overlapClasses(gclass, classes)= false
 	post classes = classes~ union {gclass};
 	
 	

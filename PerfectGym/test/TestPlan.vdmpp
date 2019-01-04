@@ -85,22 +85,23 @@ operations
 			 dcl exercise1:Exercise:= new Exercise(4, 10, <Leg>, "leg workout");
 			 dcl exercise2:Exercise:= new Exercise(2, 15, <Arm>, "arm workout");
  			 dcl exercise3:Exercise:= new Exercise(2, 5, <Ab>, "ab workout");
+ 			 dcl exercise4:Exercise:= new Exercise(3, 5, <Ab>, "ab crunch");
   
-			 plan := new Plan([exercise1, exercise3, exercise2], prof);  
+			 plan := new Plan([exercise1, exercise3, exercise2, exercise4], prof);  
  
-			 assertEqual(plan.getExercises(), [exercise1, exercise3, exercise2]);
+			 assertEqual(plan.getExercises(), [exercise1, exercise3, exercise2, exercise4]);
 			 
 			 plan.removeExercise(exercise1);
 			 
 			 --remove 1st element 
-			 assertEqual(plan.getExercises(), [exercise3, exercise2]); 
+			 assertEqual(plan.getExercises(), [exercise3, exercise2, exercise4]); 
 			 
 			 plan.removeExercise(exercise2);
+			 assertEqual(plan.getExercises(), [exercise3, exercise4]); 
+			 
+			 plan.removeExercise(exercise4);
+			 
 			 assertEqual(plan.getExercises(), [exercise3]); 
-			 
-			 plan.removeExercise(exercise3);
-			 
-			 assertEqual(plan.getExercises(), []); 
 	);
 	
   
