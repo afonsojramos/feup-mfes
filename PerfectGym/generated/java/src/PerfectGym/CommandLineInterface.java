@@ -14,11 +14,15 @@ public class CommandLineInterface {
 
     CommandLineInterface(PerfectGym perfectGym) {
         this.perfectGym = perfectGym;
+        initDB();
     }
-
+    
     public void mainMenu() {
         printEmptyLines(EMPTY_LINES);
-        System.out.println("Welcome to the Perfect Gym!");
+        if (perfectGym.getLoggedUser() != null)
+            System.out.println("Welcome to the Perfect Gym " + perfectGym.getLoggedUser().getName() + "!");
+        else 
+            System.out.println("Welcome to the Perfect Gym!");
         printLine();
         ArrayList<SimpleEntry<String, Callable<Void>>> mainMenuEntries = new ArrayList<>();
 
@@ -36,10 +40,33 @@ public class CommandLineInterface {
         }
     }
 
+    private void initDB() {
+        Professor prof = new Professor("Jose", "Luis", "test@test.com", "Masculine", "a");
+        perfectGym.addUser(prof);
+        GymClass gclass1 = new GymClass("cycling", "Cycling", "cycling class", 10, prof, "Monday", new GymClass.Time(15, 20), 90);
+        GymClass gclass5 = new GymClass("bodyattack", "Body Combat", "bodyattack class", 10, prof, "Tuesday", new GymClass.Time(15, 20), 90);
+        GymClass gclass2 = new GymClass("yoga", "Yoga", "yoga class", 10, prof, "Monday", new GymClass.Time(8, 0), 45);
+        GymClass gclass3 = new GymClass("zumba I", "Zumba", "zumba class", 10, prof, "Monday", new GymClass.Time(20, 30), 90);
+        GymClass gclass4 = new GymClass("cycling II", "Cycling", "cycling class", 10, prof, "Saturday", new GymClass.Time(9, 40), 60);
+        GymClass gclass6 = new GymClass("cycling3", "Cycling", "cycling class", 10, prof, "Monday", new GymClass.Time(8, 50), 45);
+        perfectGym.addUser(new Member("Claudia", "Rodrigues", "up201508262@fe.up.pt", "Feminine", 1997, 50, 1.67, "qwerty1234"));
+        perfectGym.addUser(new Member("Afonso", "Ramos", "up201506239@fe.up.pt", "Masculine", 1950, 75, 1.91, "qwerty1234"));
+        perfectGym.addClass(gclass1);
+        perfectGym.addClass(gclass2);
+        perfectGym.addClass(gclass3);
+        perfectGym.addClass(gclass4);
+        perfectGym.addClass(gclass5);
+        perfectGym.addClass(gclass6);
+        
+    }
+
     private void getMainMenuEntries(ArrayList<SimpleEntry<String, Callable<Void>>> mainMenuEntries) {
         if (perfectGym.getLoggedUser() == null) {
             mainMenuEntries.add(new SimpleEntry<>("Create Account", () -> {
                 perfectGym.addUser(createAccountMenu());
+                System.out.print("User Created with ID: " + perfectGym.getUsers().size());
+                reader.nextLine();
+                mainMenu();
                 return null;
             }));
             mainMenuEntries.add(new SimpleEntry<>("Login", () -> {
@@ -47,6 +74,22 @@ public class CommandLineInterface {
                 return null;
             }));
         } else {
+            mainMenuEntries.add(new SimpleEntry<>("Get Activity Schedule", () -> {
+                System.out.print("Activity: ");
+                String activity = reader.nextLine();
+                System.out.print(perfectGym.getSchedule2(activity));
+                reader.nextLine();
+                mainMenu();
+                return null;
+            }));
+            mainMenuEntries.add(new SimpleEntry<>("Get Day Schedule", () -> {
+                System.out.print("Day of the Week: ");
+                //String day = reader.nextLine();
+                System.out.print(perfectGym.getSchedule("Monday").get("Monday"));
+                reader.nextLine();
+                mainMenu();
+                return null;
+            }));
             mainMenuEntries.add(new SimpleEntry<>("Account Management", () -> {
                 loggedInMenu();
                 return null;
@@ -84,7 +127,6 @@ public class CommandLineInterface {
         double height = Double.parseDouble(reader.nextLine());
         System.out.print("Gender (Masculine, Feminine): ");
         String gender = reader.nextLine();
-        printEmptyLines(EMPTY_LINES);
 
         return new Member(firstName, lastName, email, gender, birthYear, weight, height, password);
     }
@@ -108,7 +150,7 @@ public class CommandLineInterface {
 
     private void loggedInMenu() {
         printEmptyLines(EMPTY_LINES);
-        System.out.println("Account Management");
+        System.out.println(perfectGym.getLoggedUser().getClass().getSimpleName() + " Account Management");
         printLine();
         ArrayList<SimpleEntry<String, Callable<Void>>> loggedInMenuEntries = new ArrayList<>();
 
@@ -128,31 +170,52 @@ public class CommandLineInterface {
 
     private void getLoggedInMenuEntries(ArrayList<SimpleEntry<String, Callable<Void>>> loggedInMenuEntries) {
         if (perfectGym.getLoggedUser() != null) {
-            loggedInMenuEntries.add(new SimpleEntry<>("Update Weight", () -> {
-            	System.out.print("New Weight: ");
-                double weight = Double.parseDouble(reader.nextLine());
-                ((Member) perfectGym.getLoggedUser()).setWeight(weight);
-                printEmptyLines(EMPTY_LINES);
-                loggedInMenu();
-                return null;
-            }));
-            loggedInMenuEntries.add(new SimpleEntry<>("Update Height", () -> {
-            	System.out.print("New Height: ");
-                double height = Double.parseDouble(reader.nextLine());
+            if (perfectGym.getLoggedUser().getClass().getSimpleName() == "Member"){
+                loggedInMenuEntries.add(new SimpleEntry<>("Update Weight", () -> {
+                    System.out.print("New Weight: ");
+                    double weight = Double.parseDouble(reader.nextLine());
+                    ((Member) perfectGym.getLoggedUser()).setWeight(weight);
+                    printEmptyLines(EMPTY_LINES);
+                    loggedInMenu();
+                    return null;
+                }));
+                loggedInMenuEntries.add(new SimpleEntry<>("Update Height", () -> {
+                    System.out.print("New Height: ");
+                    double height = Double.parseDouble(reader.nextLine());
+                    ((Member) perfectGym.getLoggedUser()).setHeight(height);
+                    printEmptyLines(EMPTY_LINES);
+                    loggedInMenu();
+                    return null;
+                }));
+                loggedInMenuEntries.add(new SimpleEntry<>("Update Mobile", () -> {
+                    System.out.print("New Mobile Number: ");
+                    int height = Integer.parseInt(reader.nextLine());
+                    ((Member) perfectGym.getLoggedUser()).setHeight(height);
+                    printEmptyLines(EMPTY_LINES);
+                    loggedInMenu();
+                    return null;
+                }));
+                loggedInMenuEntries.add(new SimpleEntry<>("Get Monthly Due", () -> {
+                    System.out.print("Your Montlhy due is: " + ((Member) perfectGym.getLoggedUser()).getMonthly());
+                    reader.nextLine();
+                    printEmptyLines(EMPTY_LINES);
+                    loggedInMenu();
+                    return null;
+                }));
+                loggedInMenuEntries.add(new SimpleEntry<>("Refer a Friend", () -> {
+                    perfectGym.addUserReferral(((Member) perfectGym.getLoggedUser()), createAccountMenu());
+                    printEmptyLines(EMPTY_LINES);
+                    loggedInMenu();
+                    return null;
+                }));
+                
+            } else if (perfectGym.getLoggedUser().getClass().getSimpleName() == "Professor") {
+
+            }
+            loggedInMenuEntries.add(new SimpleEntry<>("Update Mobile", () -> {
+                System.out.print("New Mobile Number: ");
+                int height = Integer.parseInt(reader.nextLine());
                 ((Member) perfectGym.getLoggedUser()).setHeight(height);
-                printEmptyLines(EMPTY_LINES);
-                loggedInMenu();
-                return null;
-            }));
-            loggedInMenuEntries.add(new SimpleEntry<>("Get Monthly Due", () -> {
-                System.out.print("Your Montlhy due is: " + ((Member) perfectGym.getLoggedUser()).getMonthly());
-                reader.nextLine();
-                printEmptyLines(EMPTY_LINES);
-                loggedInMenu();
-                return null;
-            }));
-            loggedInMenuEntries.add(new SimpleEntry<>("Refer a Friend", () -> {
-                perfectGym.addUserReferral(((Member) perfectGym.getLoggedUser()), createAccountMenu());
                 printEmptyLines(EMPTY_LINES);
                 loggedInMenu();
                 return null;
