@@ -2,8 +2,14 @@ package PerfectGym;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
+
+import org.overture.codegen.runtime.SeqUtil;
+import org.overture.codegen.runtime.SeqUtil;
+import org.overture.codegen.runtime.VDMSeq;
+import org.overture.codegen.runtime.Utils;
 
 public class CommandLineInterface {
 
@@ -74,7 +80,7 @@ public class CommandLineInterface {
                 return null;
             }));
         } else {
-            mainMenuEntries.add(new SimpleEntry<>("Get Activity Schedule", () -> {
+            mainMenuEntries.add(new SimpleEntry<>("Get Activity Schedule", () -> { // TODO
                 System.out.print("Activity: ");
                 String activity = reader.nextLine();
                 System.out.print(perfectGym.getSchedule2(activity));
@@ -84,8 +90,68 @@ public class CommandLineInterface {
             }));
             mainMenuEntries.add(new SimpleEntry<>("Get Day Schedule", () -> {
                 System.out.print("Day of the Week: ");
-                //String day = reader.nextLine();
-                System.out.print(perfectGym.getSchedule("Monday").get("Monday"));
+                String day = reader.nextLine();
+                System.out.print("\n  |    Name    |   Type   |     Description     |   Capacity   |  Professor  |    Date    |  Time  | Duration\n");
+                for (Iterator iter = SeqUtil.inds((VDMSeq) perfectGym.getSchedule(day).get(day)).iterator(); iter.hasNext(); ) {
+                    Number i = (Number) iter.next();
+                    
+                    System.out.print(i + " | " + 
+                        printWithWhitespace(((GymClass) Utils.get((VDMSeq) perfectGym.getSchedule(day).get(day), i)).getName(), "    Name    ".length())
+                        + " | " + 
+                        printWithWhitespace(((GymClass) Utils.get((VDMSeq) perfectGym.getSchedule(day).get(day), i)).getType().toString(), "   Type   ".length())
+                        + " | " + 
+                        printWithWhitespace(((GymClass) Utils.get((VDMSeq) perfectGym.getSchedule(day).get(day), i)).getDescription(), "     Description     ".length())
+                        + " | " + 
+                        printWithWhitespace(((GymClass) Utils.get((VDMSeq) perfectGym.getSchedule(day).get(day), i)).getCapacity().toString(), "   Capacity   ".length())
+                        + " | " + 
+                        printWithWhitespace(((GymClass) Utils.get((VDMSeq) perfectGym.getSchedule(day).get(day), i)).getProfessor().getName(), "  Professor  ".length())
+                        + " | " + 
+                        printWithWhitespace(((GymClass) Utils.get((VDMSeq) perfectGym.getSchedule(day).get(day), i)).getDate().toString(), "    Date    ".length())
+                        + " | " + 
+                        printWithWhitespace(((GymClass) Utils.get((VDMSeq) perfectGym.getSchedule(day).get(day), i)).getTime().hour 
+                        + "h" 
+                        + ((GymClass) Utils.get((VDMSeq) perfectGym.getSchedule(day).get(day), i)).getTime().minute, "  Time  ".length())
+                        + " | " + 
+                        printWithWhitespace(((GymClass) Utils.get((VDMSeq) perfectGym.getSchedule(day).get(day), i)).getDuration().toString(), 10) + "\n");
+                }
+                reader.nextLine();
+                mainMenu();
+                return null;
+            }));
+            mainMenuEntries.add(new SimpleEntry<>("Get All Classes", () -> { //TODO
+                System.out.print("Day of the Week: ");
+                String day = reader.nextLine();
+                System.out.print("\n  |    Name    |   Type   |     Description     |   Capacity   |  Professor  |    Date    |  Time  | Duration\n");
+                for (Iterator iter = SeqUtil.inds((VDMSeq) perfectGym.getSchedule(day).get(day)).iterator(); iter.hasNext(); ) {
+                    Number i = (Number) iter.next();
+                    
+                    System.out.print(i + " | " + 
+                        printWithWhitespace(((GymClass) Utils.get((VDMSeq) perfectGym.getSchedule(day).get(day), i)).getName(), "    Name    ".length())
+                        + " | " + 
+                        printWithWhitespace(((GymClass) Utils.get((VDMSeq) perfectGym.getSchedule(day).get(day), i)).getType().toString(), "   Type   ".length())
+                        + " | " + 
+                        printWithWhitespace(((GymClass) Utils.get((VDMSeq) perfectGym.getSchedule(day).get(day), i)).getDescription(), "     Description     ".length())
+                        + " | " + 
+                        printWithWhitespace(((GymClass) Utils.get((VDMSeq) perfectGym.getSchedule(day).get(day), i)).getCapacity().toString(), "   Capacity   ".length())
+                        + " | " + 
+                        printWithWhitespace(((GymClass) Utils.get((VDMSeq) perfectGym.getSchedule(day).get(day), i)).getProfessor().getName(), "  Professor  ".length())
+                        + " | " + 
+                        printWithWhitespace(((GymClass) Utils.get((VDMSeq) perfectGym.getSchedule(day).get(day), i)).getDate().toString(), "    Date    ".length())
+                        + " | " + 
+                        printWithWhitespace(((GymClass) Utils.get((VDMSeq) perfectGym.getSchedule(day).get(day), i)).getTime().hour 
+                        + "h" 
+                        + ((GymClass) Utils.get((VDMSeq) perfectGym.getSchedule(day).get(day), i)).getTime().minute, "  Time  ".length())
+                        + " | " + 
+                        printWithWhitespace(((GymClass) Utils.get((VDMSeq) perfectGym.getSchedule(day).get(day), i)).getDuration().toString(), 10) + "\n");
+                }
+                reader.nextLine();
+                mainMenu();
+                return null;
+            }));
+            mainMenuEntries.add(new SimpleEntry<>("Enroll in Class", () -> { // TODO
+                System.out.print("Activity: ");
+                String activity = reader.nextLine();
+                System.out.print(perfectGym.getSchedule2(activity));
                 reader.nextLine();
                 mainMenu();
                 return null;
@@ -256,5 +322,13 @@ public class CommandLineInterface {
         for (int i = 0; i < linesToPrint; i++) {
             System.out.println();
         }
+    }
+
+    private String printWithWhitespace(String toPrint, int space) {
+        String white = "";
+        for (int i = toPrint.length() ; i < space - 2 ; i++){
+            white = white + " ";
+        }
+        return toPrint + white;
     }
 }
