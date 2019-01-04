@@ -7,9 +7,12 @@ import java.util.Scanner;
 import java.util.concurrent.Callable;
 
 import org.overture.codegen.runtime.SeqUtil;
-import org.overture.codegen.runtime.SeqUtil;
+import org.overture.codegen.runtime.MapUtil;
 import org.overture.codegen.runtime.VDMSeq;
 import org.overture.codegen.runtime.Utils;
+
+import PerfectGym.GymClass.Time;
+
 
 public class CommandLineInterface {
 
@@ -83,7 +86,16 @@ public class CommandLineInterface {
             mainMenuEntries.add(new SimpleEntry<>("Get Activity Schedule", () -> { // TODO
                 System.out.print("Activity: ");
                 String activity = reader.nextLine();
-                System.out.print(perfectGym.getSchedule2(activity));
+                
+                for (Iterator iter = MapUtil.dom(Utils.copy(perfectGym.getSchedule2(activity))).iterator(); iter.hasNext(); ) {
+                    Object day = (Object) iter.next();
+                    System.out.print("\n" + day + " Classes:");
+                    for (Iterator iter2 = SeqUtil.inds((VDMSeq) perfectGym.getSchedule2(activity).get(day)).iterator(); iter2.hasNext(); ) {
+                        Object timeOfDay = (Object) iter2.next();
+                        System.out.print( "\n > " + ((Time) Utils.get((VDMSeq) perfectGym.getSchedule2(activity).get(day), timeOfDay)).hour + "h" + 
+                        ((Time) Utils.get((VDMSeq) perfectGym.getSchedule2(activity).get(day), timeOfDay)).minute);
+                    }
+                }
                 reader.nextLine();
                 mainMenu();
                 return null;
