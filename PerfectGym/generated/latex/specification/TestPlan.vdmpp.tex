@@ -1,0 +1,166 @@
+\begin{vdmpp}[breaklines=true]
+class TestPlan is subclass of MyTest
+types
+operations
+ 
+ 
+ -- Test create plan 
+(*@
+\label{createEmptyPlan:7}
+@*)
+ private createEmptyPlan: () ==> ()
+ createEmptyPlan() == (
+    
+    dcl plan:Plan := new Plan();
+    assertEqual(plan.getExercises(), []);
+ );
+ 
+ 
+ -- Test create plan 
+(*@
+\label{createPlan:16}
+@*)
+ private createPlan: () ==> ()
+ createPlan() == (
+    
+    dcl series:seq of Exercise := [];
+    dcl plan:Plan;
+    dcl prof:Professor := new TestUser().newProfessor(); 
+    dcl exercise1:Exercise:= new Exercise(4, 10, <Leg>, "leg workout");
+    dcl exercise2:Exercise:= new Exercise(2, 15, <Arm>, "arm workout");
+    
+    series:= series ^ [exercise1];
+    series:= series ^ [exercise2];
+    
+    plan := new Plan(series, prof);
+    
+    assertEqual(plan.getExercises(), [exercise1, exercise2]);
+    assertEqual(plan.getProfessor(), prof);
+ );
+ 
+ -- Test add same exercise to plan
+(*@
+\label{addSameExercise:35}
+@*)
+ private addSameExercise: () ==> ()
+ addSameExercise() == (*@\vdmnotcovered{(}@*)
+    
+    dcl series:seq of Exercise := (*@\vdmnotcovered{[}@*)];
+    dcl plan:Plan;
+    dcl prof:Professor := (*@\vdmnotcovered{new}@*) (*@\vdmnotcovered{TestUser}@*)().(*@\vdmnotcovered{newProfessor}@*)(); 
+    dcl exercise1:Exercise:= new Exercise((*@\vdmnotcovered{4}@*), (*@\vdmnotcovered{10}@*), <Leg>, (*@\vdmnotcovered{"leg workout"}@*));
+    
+    (*@\vdmnotcovered{series}@*):= (*@\vdmnotcovered{series}@*) ^ (*@\vdmnotcovered{[}@*)(*@\vdmnotcovered{exercise1}@*), (*@\vdmnotcovered{exercise1}@*)];
+  
+    plan := new Plan((*@\vdmnotcovered{series}@*), (*@\vdmnotcovered{prof}@*));    --breaks precondition
+    
+    plan := new Plan([(*@\vdmnotcovered{exercise1}@*)], (*@\vdmnotcovered{prof}@*));
+    (*@\vdmnotcovered{plan}@*).addExercise((*@\vdmnotcovered{exercise1}@*));     --breaks precondition
+ );
+ 
+ 
+  -- Test add exercises
+(*@
+\label{addExercises:53}
+@*)
+ private addExercises: () ==> ()
+ addExercises() == (
+    
+    dcl plan:Plan;
+    dcl prof:Professor := new TestUser().newProfessor(); 
+    dcl exercise1:Exercise:= new Exercise(4, 10, <Leg>, "leg workout");
+    dcl exercise2:Exercise:= new Exercise(2, 15, <Arm>, "arm workout");
+     dcl exercise3:Exercise:= new Exercise(2, 5, <Ab>, "ab workout");
+  
+    plan := new Plan([exercise1], prof);  
+    assertEqual(plan.getExercises(), [exercise1]);
+    assertEqual(plan.getProfessor(), prof);
+    
+    plan.addExercise(exercise2);
+    
+    assertEqual(plan.getExercises(), [exercise1, exercise2]);
+    assertEqual(plan.getProfessor(), prof);
+    
+    plan.addExercise(exercise3);
+    
+    assertEqual(plan.getExercises(), [exercise1, exercise2, exercise3]);
+    assertEqual(plan.getProfessor(), prof);
+    
+ );
+ 
+ 
+ -- Test remove exercises
+(*@
+\label{removeExercises:80}
+@*)
+ private removeExercises: () ==> ()
+ removeExercises() == (
+    
+    dcl plan:Plan;
+    dcl prof:Professor := new TestUser().newProfessor(); 
+    dcl exercise1:Exercise:= new Exercise(4, 10, <Leg>, "leg workout");
+    dcl exercise2:Exercise:= new Exercise(2, 15, <Arm>, "arm workout");
+     dcl exercise3:Exercise:= new Exercise(2, 5, <Ab>, "ab workout");
+     dcl exercise4:Exercise:= new Exercise(3, 5, <Ab>, "ab crunch");
+  
+    plan := new Plan([exercise1, exercise3, exercise2, exercise4], prof);  
+ 
+    assertEqual(plan.getExercises(), [exercise1, exercise3, exercise2, exercise4]);
+    
+    plan.removeExercise(exercise1);
+    
+    --remove 1st element 
+    assertEqual(plan.getExercises(), [exercise3, exercise2, exercise4]); 
+    
+    plan.removeExercise(exercise2);
+    assertEqual(plan.getExercises(), [exercise3, exercise4]); 
+    
+    plan.removeExercise(exercise4);
+    
+    assertEqual(plan.getExercises(), [exercise3]); 
+ );
+ 
+  
+ -- Runs all the tests associated with a gym class
+(*@
+\label{test:109}
+@*)
+ public test: () ==> ()
+ test() == (
+  
+   createEmptyPlan();
+   createPlan();
+   addExercises();
+   removeExercises();
+  
+    /***** TEST CASES WITH INVALID INPUTS ******/
+   --addSameExercise();
+   
+ );
+
+ 
+end TestPlan
+\end{vdmpp}
+\bigskip
+\begin{longtable}{|l|r|r|r|}
+\hline
+Function or operation & Line & Coverage & Calls \\
+\hline
+\hline
+\hyperref[addExercises:53]{addExercises} & 53&100.0\% & 3 \\
+\hline
+\hyperref[addSameExercise:35]{addSameExercise} & 35&0.0\% & 0 \\
+\hline
+\hyperref[createEmptyPlan:7]{createEmptyPlan} & 7&100.0\% & 9 \\
+\hline
+\hyperref[createPlan:16]{createPlan} & 16&100.0\% & 3 \\
+\hline
+\hyperref[removeExercises:80]{removeExercises} & 80&100.0\% & 3 \\
+\hline
+\hyperref[test:109]{test} & 109&100.0\% & 3 \\
+\hline
+\hline
+TestPlan.vdmpp & & 86.0\% & 21 \\
+\hline
+\end{longtable}
+

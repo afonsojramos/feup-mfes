@@ -1,0 +1,267 @@
+\begin{vdmpp}[breaklines=true]
+class GymClass
+
+values
+ 
+ public classDuration: set of nat1 = {45, 60, 90}; --minutes
+ public classCapacity: set of nat1 = {10, 20, 50}; --members
+ 
+types
+ 
+ -- Day in the week  
+ public Day_week = <Monday> | <Tuesday> | <Wednesday> | <Thursday> | <Friday> | <Saturday> | <Sunday>;
+ 
+ -- Type of class
+ public ClassType = <Cycling> | <BodyCombat> | <BodyAttack> | <Yoga> | <Zumba> | <RPM> | <Step>;  
+ 
+ -- Time in the day
+ public Time:: hour : nat
+        minute : nat
+        
+ inv t == t.hour < 24 and t.minute < 60;
+ 
+ -- Duration  
+ public Duration = nat1
+  inv d == d in set classDuration; 
+ 
+ -- Capacity       
+ public Capacity = nat1
+  inv c == c in set classCapacity; 
+
+instance variables
+ 
+ --Name
+ private name: seq of char := [];
+ private type: ClassType;
+ 
+ -- Description
+ private description: seq of char := [];
+ 
+ -- Professor
+ private professor:Professor;
+ 
+ -- Participants
+ private participants: set of Member := {};
+ 
+ -- Date, time and duration
+ private date: Day_week;
+ private time: Time;
+ private duration: Duration;
+ 
+  -- Capacity
+ private capacity: Capacity; 
+ 
+ -- available spots
+ private availableSpace:nat;
+ 
+ -- consistent available spots
+ inv availableSpace = capacity - card participants - 1 and availableSpace >= 0;
+ 
+  -- No empty name or description
+  inv len name > 0 and len description > 0;
+ 
+operations
+
+  -- constructor 
+(*@
+\label{GymClass:65}
+@*)
+ public GymClass : seq of char * ClassType* seq of char * Capacity * Professor * Day_week * Time * Duration ==> GymClass
+ GymClass (className, classType, classDescription, cap, prof, dt, tim, dur) == (
+  name := className;
+  type := classType;
+  description := classDescription;
+  capacity:= cap;
+  professor := prof;
+  date := dt;
+  time := tim;
+  duration := dur;
+  availableSpace := capacity - 1; --professor
+  return self
+ )
+ pre len className > 0 and len classDescription > 0;
+ 
+ 
+ -- get the class name
+(*@
+\label{getName:82}
+@*)
+  pure public getName : () ==> seq of char 
+  getName () == (
+   return name;
+  );
+  
+  -- get the class type
+(*@
+\label{getType:88}
+@*)
+  public getType : () ==> ClassType
+  getType () == (
+   return type;
+  );
+   
+ -- set the class name
+(*@
+\label{setName:94}
+@*)
+  public setName :  seq of char ==> ()
+  setName (n) == (
+   name := n;
+  );
+   
+  -- get the class description
+(*@
+\label{getDescription:100}
+@*)
+  pure public getDescription : () ==>  seq of char
+  getDescription () == (
+   return description;
+  );
+   
+  -- set the class description
+(*@
+\label{setDescription:106}
+@*)
+ public setDescription :  seq of char ==> ()
+ setDescription (d) == (
+  description := d;
+ );
+ 
+ -- get all the participants 
+(*@
+\label{getParticipants:112}
+@*)
+ public pure getParticipants : () ==> set of Member
+ getParticipants() == (
+  return participants;
+ );
+ 
+ -- get empty space
+(*@
+\label{getEmptySpace:118}
+@*)
+ public getEmptySpace: () ==> nat
+ getEmptySpace()== (
+  return availableSpace;
+ ); 
+  
+ -- add a new participant
+(*@
+\label{addParticipant:124}
+@*)
+ public addParticipant: Member ==> ()
+ addParticipant(Member) == (
+  
+  atomic (
+   participants := participants union {Member};
+   availableSpace := availableSpace - 1;
+   );
+ )
+ pre Member not in set participants and availableSpace > 0
+ post Member in set participants and availableSpace = availableSpace~ -1 ; 
+ 
+ 
+ -- remove a participant
+(*@
+\label{removeParticipant:137}
+@*)
+ public removeParticipant: Member ==> ()
+ removeParticipant(Member) == (
+  
+  atomic (
+   participants := participants \ {Member};
+   availableSpace := availableSpace + 1;
+  );
+ )
+ pre Member in set participants 
+ post participants = participants~ \ {Member}  and availableSpace = availableSpace~ +1 ;  
+ 
+ 
+ -- get date
+(*@
+\label{getDate:150}
+@*)
+ public pure getDate : () ==> Day_week
+ getDate() == (
+  return date;
+ );
+ 
+ -- get time
+(*@
+\label{getTime:156}
+@*)
+ public pure getTime : () ==> Time
+ getTime() == (
+  return time;
+ );
+ 
+ -- get duration
+(*@
+\label{getDuration:162}
+@*)
+ public pure getDuration : () ==> nat1
+ getDuration() == (
+  return duration;
+ );
+   
+ -- get capacity
+(*@
+\label{getCapacity:168}
+@*)
+ public pure getCapacity : () ==> nat1
+ getCapacity() == (
+  return capacity;
+ );
+ 
+ --get professor
+(*@
+\label{getProfessor:174}
+@*)
+ public pure getProfessor:() ==> Professor
+ getProfessor() == (
+  return professor;
+ );
+     
+end GymClass
+\end{vdmpp}
+\bigskip
+\begin{longtable}{|l|r|r|r|}
+\hline
+Function or operation & Line & Coverage & Calls \\
+\hline
+\hline
+\hyperref[GymClass:65]{GymClass} & 65&100.0\% & 48 \\
+\hline
+\hyperref[addParticipant:124]{addParticipant} & 124&100.0\% & 12 \\
+\hline
+\hyperref[getCapacity:168]{getCapacity} & 168&100.0\% & 6 \\
+\hline
+\hyperref[getDate:150]{getDate} & 150&100.0\% & 210 \\
+\hline
+\hyperref[getDescription:100]{getDescription} & 100&100.0\% & 6 \\
+\hline
+\hyperref[getDuration:162]{getDuration} & 162&100.0\% & 33 \\
+\hline
+\hyperref[getEmptySpace:118]{getEmptySpace} & 118&100.0\% & 9 \\
+\hline
+\hyperref[getName:82]{getName} & 82&100.0\% & 108 \\
+\hline
+\hyperref[getParticipants:112]{getParticipants} & 112&100.0\% & 66 \\
+\hline
+\hyperref[getProfessor:174]{getProfessor} & 174&100.0\% & 48 \\
+\hline
+\hyperref[getTime:156]{getTime} & 156&100.0\% & 303 \\
+\hline
+\hyperref[getType:88]{getType} & 88&100.0\% & 72 \\
+\hline
+\hyperref[removeParticipant:137]{removeParticipant} & 137&100.0\% & 6 \\
+\hline
+\hyperref[setDescription:106]{setDescription} & 106&100.0\% & 3 \\
+\hline
+\hyperref[setName:94]{setName} & 94&100.0\% & 3 \\
+\hline
+\hline
+GymClass.vdmpp & & 100.0\% & 933 \\
+\hline
+\end{longtable}
+

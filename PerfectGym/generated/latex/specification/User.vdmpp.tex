@@ -1,0 +1,148 @@
+\begin{vdmpp}[breaklines=true]
+class User
+types
+ public Gender = <Masculine> | <Feminine>;
+values
+
+instance variables
+ 
+ -- id (static)
+ public static id : nat1 := 1;
+ 
+ -- User's first name
+ protected firstName: seq of char;
+ 
+ -- User's last name
+ protected lastName:seq of char;
+ 
+ -- User's email
+ protected email:seq of char;
+ 
+ -- User's gender
+ protected gender: Gender;
+ 
+ --User's number
+ protected membershipNumber : nat1;
+ 
+ --User's mobile
+ protected mobile: [nat1];
+ 
+ --User's password
+ protected password: seq of char;
+ 
+operations
+
+ -- Constructor
+(*@
+\label{User:35}
+@*)
+ public User : seq of char * seq of char * seq of char * Gender * seq of char  ==> User
+ User (fName, lName, mail, g, pass) == (
+ 
+  firstName := fName;
+   lastName := lName;
+   email := mail;
+   gender := g;
+   membershipNumber := id;
+   id := id +1;
+   mobile := nil;
+   password := pass;
+ )
+ pre len mail >= 5 and len mail < 50
+  and len fName > 0 and len fName < 20
+  and len pass > 0 and len pass < 20
+  and len lName > 0 and len lName < 20
+ post firstName = fName and lastName = lName and password= pass and email = mail and gender = g and membershipNumber = id~;
+ 
+ 
+ -- Returns the user's name
+(*@
+\label{getName:55}
+@*)
+ public getName: () ==> seq of char
+ getName() ==
+  return firstName ^" "^ lastName;
+  
+  
+ -- Returns the user's email
+(*@
+\label{getEmail:61}
+@*)
+ public getEmail: () ==> seq of char
+ getEmail() ==
+  return email;
+  
+  
+ -- Returns the user's membershipNumber
+(*@
+\label{getNumber:67}
+@*)
+ public pure getNumber: () ==> nat1
+ getNumber() ==
+  return membershipNumber;
+  
+  
+ -- Returns the user's gender
+(*@
+\label{getGender:73}
+@*)
+ public getGender: () ==> Gender
+ getGender() ==
+  return gender;
+
+  
+ -- Returns the user's password
+(*@
+\label{getPassword:79}
+@*)
+ public getPassword: () ==> seq of char
+ getPassword() == return password;
+  
+  
+ -- Returns the user's mobile
+(*@
+\label{getMobile:84}
+@*)
+ public getMobile: () ==> [nat1]
+ getMobile() ==
+  return mobile;
+  
+  
+ -- Set mobile 
+(*@
+\label{setMobile:90}
+@*)
+ public setMobile: nat1 ==> ()
+ setMobile(m) == (
+  mobile:=m
+ );
+ 
+end User
+\end{vdmpp}
+\bigskip
+\begin{longtable}{|l|r|r|r|}
+\hline
+Function or operation & Line & Coverage & Calls \\
+\hline
+\hline
+\hyperref[User:35]{User} & 35&100.0\% & 87 \\
+\hline
+\hyperref[getEmail:61]{getEmail} & 61&100.0\% & 12 \\
+\hline
+\hyperref[getGender:73]{getGender} & 73&100.0\% & 12 \\
+\hline
+\hyperref[getMobile:84]{getMobile} & 84&100.0\% & 6 \\
+\hline
+\hyperref[getName:55]{getName} & 55&100.0\% & 12 \\
+\hline
+\hyperref[getNumber:67]{getNumber} & 67&100.0\% & 3459 \\
+\hline
+\hyperref[getPassword:79]{getPassword} & 79&100.0\% & 54 \\
+\hline
+\hyperref[setMobile:90]{setMobile} & 90&100.0\% & 3 \\
+\hline
+\hline
+User.vdmpp & & 100.0\% & 3645 \\
+\hline
+\end{longtable}
+

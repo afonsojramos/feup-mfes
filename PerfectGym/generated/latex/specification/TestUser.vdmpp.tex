@@ -1,0 +1,176 @@
+\begin{vdmpp}[breaklines=true]
+class TestUser is subclass of MyTest
+types
+operations
+ 
+ --Creates a new member
+(*@
+\label{newMember:6}
+@*)
+ public newMember: () ==> Member
+ newMember() == (
+  return new Member("Cláudia", "Rodrigues", "up201508262@fe.up.pt", <Feminine>, 1997, 50, 1.67, "qwerty1234");
+ );
+ 
+(*@
+\label{newMember2:11}
+@*)
+ public newMember2: () ==> Member
+ newMember2() == (
+  return new Member("Afonso", "Ramos", "up201506239@fe.up.pt", <Masculine>, 1950, 75, 1.91, "qwerty1234");
+ );
+ 
+(*@
+\label{newMember3:16}
+@*)
+ public newMember3: () ==> Member
+ newMember3() == (
+  return new Member("Carlos", "Freitas", "carlos@fe.up.pt", <Masculine>, 1997, 60, 1.51, "qwerty1234");
+ );
+ 
+(*@
+\label{newMember4:21}
+@*)
+ public newMember4: () ==> Member
+ newMember4() == (
+  return new Member("Pedro", "Sousa", "pedro@fe.up.pt", <Masculine>, 1997, 70, 1.71, "qwerty1234");
+ );
+ 
+ --Creates a new professor
+(*@
+\label{newProfessor:27}
+@*)
+ public newProfessor: () ==> Professor
+ newProfessor() == (
+  return new Professor("Jose", "Luis", "test@test.com", <Masculine>, "qwerty1234");
+ );
+ 
+ -- Test 1
+(*@
+\label{memberTest:33}
+@*)
+ private memberTest: () ==> ()
+ memberTest() == (
+   
+   dcl user:Member := newMember();
+   assertTrue(user.getName() = "Cláudia Rodrigues"); 
+   assertTrue(user.getEmail() = "up201508262@fe.up.pt"); 
+   assertTrue(user.getPassword() = "qwerty1234");
+   assertTrue(user.getGender() = <Feminine>); 
+   assertTrue(user.getNumber() = 1); 
+   
+   assertTrue(user.getWeight() = 50);
+   assertTrue(user.getHeight() = 1.67); 
+ );
+ 
+ -- Test 2
+(*@
+\label{memberTest2:48}
+@*)
+ private memberTest2: () ==> ()
+ memberTest2() == (
+   
+   dcl user:Member := newMember2();
+   assertTrue(user.getName() = "Afonso Ramos"); 
+   assertTrue(user.getEmail() = "up201506239@fe.up.pt"); 
+   assertTrue(user.getPassword() = "qwerty1234");
+   assertTrue(user.getGender() = <Masculine>); 
+   assertTrue(user.getNumber() = 2); 
+   
+   assertTrue(user.getWeight() = 75);
+   assertTrue(user.getHeight() = 1.91); 
+ );
+ 
+ -- Test 3
+(*@
+\label{professorTest:63}
+@*)
+ private professorTest: () ==> ()
+ professorTest() == (
+   
+   dcl user:Professor := newProfessor();
+   assertTrue(user.getName() = "Jose Luis"); 
+   assertTrue(user.getEmail() = "test@test.com"); 
+   assertTrue(user.getPassword() = "qwerty1234");
+   assertTrue(user.getGender() = <Masculine>); 
+   assertTrue(user.getNumber() = 3); 
+   
+   -- mobile test
+   assertEqual(user.getMobile(), nil);
+   user.setMobile(911111111);
+   assertEqual(user.getMobile(), 911111111);
+ 
+ );
+ 
+ -- Test 4
+(*@
+\label{memberEditTest:81}
+@*)
+ private memberEditTest: () ==> ()
+ memberEditTest() == (
+   
+   dcl user:Member := newMember3();
+   assertTrue(user.getName() = "Carlos Freitas"); 
+   assertTrue(user.getEmail() = "carlos@fe.up.pt"); 
+   assertTrue(user.getPassword() = "qwerty1234");
+   assertTrue(user.getGender() = <Masculine>); 
+   assertTrue(user.getNumber() = 4); 
+   
+   assertTrue(user.getWeight() = 60);
+   assertTrue(user.getHeight() = 1.51); 
+   
+   user.setWeight(65);
+   user.setHeight(1.52);
+   
+   assertTrue(user.getWeight() = 65);
+   assertTrue(user.getHeight() = 1.52); 
+ );
+ 
+  
+ -- Runs all the tests associated with a user
+(*@
+\label{test:103}
+@*)
+ public test: () ==> ()
+ test() == (
+  
+   memberTest();
+   memberTest2();
+   professorTest();
+   memberEditTest();
+ );
+
+ 
+end TestUser
+\end{vdmpp}
+\bigskip
+\begin{longtable}{|l|r|r|r|}
+\hline
+Function or operation & Line & Coverage & Calls \\
+\hline
+\hline
+\hyperref[memberEditTest:81]{memberEditTest} & 81&100.0\% & 6 \\
+\hline
+\hyperref[memberTest:33]{memberTest} & 33&100.0\% & 4 \\
+\hline
+\hyperref[memberTest2:48]{memberTest2} & 48&100.0\% & 2 \\
+\hline
+\hyperref[newMember:6]{newMember} & 6&100.0\% & 22 \\
+\hline
+\hyperref[newMember2:11]{newMember2} & 11&100.0\% & 4 \\
+\hline
+\hyperref[newMember3:16]{newMember3} & 16&100.0\% & 4 \\
+\hline
+\hyperref[newMember4:21]{newMember4} & 21&100.0\% & 2 \\
+\hline
+\hyperref[newProfessor:27]{newProfessor} & 27&100.0\% & 26 \\
+\hline
+\hyperref[professorTest:63]{professorTest} & 63&100.0\% & 2 \\
+\hline
+\hyperref[test:103]{test} & 103&100.0\% & 2 \\
+\hline
+\hline
+TestUser.vdmpp & & 100.0\% & 74 \\
+\hline
+\end{longtable}
+

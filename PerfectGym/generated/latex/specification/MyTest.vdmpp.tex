@@ -1,0 +1,48 @@
+\begin{vdmpp}[breaklines=true]
+class MyTest
+operations
+ 
+ -- Simulates assertion checking by reducing it to pre-condition checking.
+ -- If 'arg' does not hold, a pre-condition violation will be signaled.
+(*@
+\label{assertTrue:6}
+@*)
+ protected assertTrue: bool ==> ()
+ assertTrue(arg) == 
+  return 
+ pre arg;
+  
+ -- Simulates assertion checking by reducing it to post-condition checking.
+ -- If values are not equal, prints a message in the console and generates 
+ -- a post-conditions violation.
+(*@
+\label{assertEqual:14}
+@*)
+ protected assertEqual: ? * ? ==> ()
+ assertEqual(expected, actual) == 
+  if expected <> actual then (*@\vdmnotcovered{(}@*)
+     IO`print((*@\vdmnotcovered{"Actual value ("}@*));
+     IO`print((*@\vdmnotcovered{actual}@*)); 
+     IO`print((*@\vdmnotcovered{") different from expected ("}@*));
+     (*@\vdmnotcovered{IO`print}@*)((*@\vdmnotcovered{expected}@*));
+     (*@\vdmnotcovered{IO`println}@*)((*@\vdmnotcovered{")\textbackslash n"}@*))
+  )
+ post expected = actual
+
+end MyTest
+\end{vdmpp}
+\bigskip
+\begin{longtable}{|l|r|r|r|}
+\hline
+Function or operation & Line & Coverage & Calls \\
+\hline
+\hline
+\hyperref[assertEqual:14]{assertEqual} & 14&38.8\% & 0 \\
+\hline
+\hyperref[assertTrue:6]{assertTrue} & 6&100.0\% & 390 \\
+\hline
+\hline
+MyTest.vdmpp & & 45.0\% & 390 \\
+\hline
+\end{longtable}
+

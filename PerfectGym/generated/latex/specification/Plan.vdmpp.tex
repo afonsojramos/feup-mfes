@@ -1,0 +1,113 @@
+\begin{vdmpp}[breaklines=true]
+class Plan
+
+instance variables
+ 
+ -- Exercises
+ private series: seq of Exercise;
+ 
+ -- Professor
+ private professor:Professor;
+ 
+operations
+ 
+ -- constructor
+(*@
+\label{Plan:14}
+@*)
+ public Plan : seq of Exercise * Professor ==> Plan
+ Plan(ex, prof) == (
+  series:= ex;
+  professor:= prof;
+ )
+ pre len ex = card elems ex; --no same exercises
+ 
+ 
+ -- empty constructor
+ public Plan : () ==> Plan
+ Plan() == (
+  series:= [];
+ );
+ 
+ -- get exercices
+(*@
+\label{getExercises:29}
+@*)
+ public getExercises:() ==> seq of Exercise
+ getExercises()  ==
+  return series;
+  
+ -- get professor
+(*@
+\label{getProfessor:34}
+@*)
+ public getProfessor:() ==> Professor
+ getProfessor()  ==
+  return professor;
+  
+  
+ -- add exercice to series
+(*@
+\label{addExercise:40}
+@*)
+ public addExercise: Exercise ==> ()
+ addExercise(ex) == (
+   series:= series ^ [ex]
+ )
+ pre ex not in set elems series
+ post len series = len series~ +1 and series(len series) = ex;
+ 
+ 
+ -- remove exercise from series
+(*@
+\label{removeExercise:49}
+@*)
+ public removeExercise:Exercise ==> ()
+ removeExercise(ex) == (
+ 
+   dcl index:nat := 1;
+   dcl exercises: seq of Exercise := series;
+   dcl done:bool := false;
+   
+   while ( done = false ) do (
+    if ( ex = hd exercises) then (
+    
+    done:=true;
+    
+    if( index = 1 ) then  series := tl series                 -- first element
+    else if(index = len series) then series:= series(1,..., len series-1)   -- last element
+    else series := series(1,..., index-1) ^ series(index+1, ..., len series)  -- middle element
+    
+   )  else(
+   
+    index := index +1;
+    exercises := tl exercises;
+   )
+   )
+ )
+ pre ex in set elems series
+ post ex not in set elems series;
+ 
+end Plan
+\end{vdmpp}
+\bigskip
+\begin{longtable}{|l|r|r|r|}
+\hline
+Function or operation & Line & Coverage & Calls \\
+\hline
+\hline
+\hyperref[Plan:14]{Plan} & 14&100.0\% & 3 \\
+\hline
+\hyperref[addExercise:40]{addExercise} & 40&100.0\% & 6 \\
+\hline
+\hyperref[getExercises:29]{getExercises} & 29&100.0\% & 27 \\
+\hline
+\hyperref[getProfessor:34]{getProfessor} & 34&100.0\% & 12 \\
+\hline
+\hyperref[removeExercise:49]{removeExercise} & 49&100.0\% & 3 \\
+\hline
+\hline
+Plan.vdmpp & & 100.0\% & 51 \\
+\hline
+\end{longtable}
+

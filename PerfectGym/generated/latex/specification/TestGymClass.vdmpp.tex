@@ -1,0 +1,195 @@
+\begin{vdmpp}[breaklines=true]
+class TestGymClass is subclass of MyTest
+types
+operations
+ 
+(*@
+\label{newGymClass:5}
+@*)
+ public newGymClass: () ==> GymClass
+ newGymClass() == (
+   dcl user:Professor := new TestUser().newProfessor();
+   return new GymClass("cycling", <Cycling>, "cycling class", 10, user, <Monday>, mk_GymClass`Time(15,20), 90);
+ );
+  
+ -- Test create gym 
+(*@
+\label{createGymClass:12}
+@*)
+ private createGymClass: () ==> ()
+ createGymClass() == (
+    
+    dcl gclass:GymClass:= newGymClass();
+   
+     -- get
+    assertEqual(gclass.getName(), "cycling");
+    assertEqual(gclass.getType(), <Cycling>);
+    assertEqual(gclass.getDescription(), "cycling class");
+    assertEqual(gclass.getDate(), <Monday>);
+    assertEqual(gclass.getCapacity(), 10);
+    assertEqual(gclass.getTime(), mk_GymClass`Time(15,20));
+    assertEqual(gclass.getDuration(), 90);
+    
+    -- set
+    gclass.setName("run");
+    gclass.setDescription("running class");
+    assertEqual(gclass.getName(), "run");
+    assertEqual(gclass.getDescription(), "running class");
+ );
+ 
+ -- Test add and remove participants
+(*@
+\label{addParticipants:34}
+@*)
+ private addParticipants: () ==> ()
+ addParticipants() == (
+    
+    dcl gclass:GymClass:= newGymClass();
+     dcl user:Member := new TestUser().newMember();
+    
+     assertEqual(card gclass.getParticipants(), 0);     --no participants
+     assertEqual(gclass.getParticipants(), {});
+      
+     assertEqual( gclass.getCapacity(), 10);            -- capacity for 10 
+     assertEqual( gclass.getEmptySpace(), 9);         -- 9 spots left
+     
+     --add a participant
+    gclass.addParticipant(user);
+    assertEqual(card gclass.getParticipants(), 1);   --one participant
+     assertEqual(gclass.getParticipants(), {user});
+     
+     assertEqual( gclass.getEmptySpace(), 8);         -- 8 spots left
+   
+   --remove a participant
+    gclass.removeParticipant(user);
+    assertEqual(card gclass.getParticipants(), 0);   --no participants
+     assertEqual(gclass.getParticipants(), {});
+     
+     assertEqual( gclass.getEmptySpace(), 9);         -- 9 spots left
+ );
+ 
+ -- Test empty class name/description
+(*@
+\label{changeClassName:62}
+@*)
+ private changeClassName: () ==> ()
+ changeClassName() == (*@\vdmnotcovered{(}@*)
+    
+    dcl gclass:GymClass:= (*@\vdmnotcovered{newGymClass}@*)();
+
+     -- get
+    (*@\vdmnotcovered{assertEqual}@*)((*@\vdmnotcovered{gclass}@*).getName(), (*@\vdmnotcovered{"cycling"}@*));
+    (*@\vdmnotcovered{assertEqual}@*)(gclass.getDescription(), (*@\vdmnotcovered{"cycling class"}@*));
+    
+    -- set
+    gclass.setName((*@\vdmnotcovered{""}@*));     -- breaks invariant
+    (*@\vdmnotcovered{gclass}@*).setDescription((*@\vdmnotcovered{""}@*)); -- breaks invariant
+    
+ );
+ 
+ -- Test add same participant
+(*@
+\label{addSameParticipant:78}
+@*)
+  private addSameParticipant: () ==> ()
+ addSameParticipant() == (*@\vdmnotcovered{(}@*)
+    
+    dcl gclass:GymClass:= (*@\vdmnotcovered{newGymClass}@*)();
+     dcl user:Member := (*@\vdmnotcovered{new}@*) (*@\vdmnotcovered{TestUser}@*)().(*@\vdmnotcovered{newMember}@*)();
+
+     --add a participant
+    gclass.addParticipant((*@\vdmnotcovered{user}@*));
+    (*@\vdmnotcovered{assertEqual}@*)(card gclass.getParticipants(), (*@\vdmnotcovered{1}@*));  
+     (*@\vdmnotcovered{assertEqual}@*)(gclass.getParticipants(), {(*@\vdmnotcovered{user}@*)});
+   
+    (*@\vdmnotcovered{gclass}@*).addParticipant((*@\vdmnotcovered{user}@*));    -- breaks pre-condition
+ );
+ 
+ -- Test remove nonexisting participant
+(*@
+\label{removeNonExistingParticipant:93}
+@*)
+  private removeNonExistingParticipant: () ==> ()
+ removeNonExistingParticipant() == (*@\vdmnotcovered{(}@*)
+    
+    dcl gclass:GymClass:= (*@\vdmnotcovered{newGymClass}@*)();
+     dcl user:Member := new TestUser().(*@\vdmnotcovered{newMember}@*)();
+    gclass.removeParticipant((*@\vdmnotcovered{user}@*));   -- breaks pre-condition
+ );
+ 
+ 
+ -- Test add participant to a full class
+(*@
+\label{addParticipantFullClass:103}
+@*)
+  private addParticipantFullClass: () ==> ()
+ addParticipantFullClass() == (*@\vdmnotcovered{(}@*)
+    
+   dcl gclass:GymClass:= (*@\vdmnotcovered{newGymClass}@*)();
+    dcl i:nat :=(*@\vdmnotcovered{0}@*);
+    
+    (*@\vdmnotcovered{assertEqual}@*)( gclass.(*@\vdmnotcovered{getCapacity}@*)(), (*@\vdmnotcovered{10}@*));          -- capacity for 10 
+    (*@\vdmnotcovered{assertEqual}@*)( card (*@\vdmnotcovered{gclass}@*).getParticipants(), (*@\vdmnotcovered{0}@*));   -- 0 members
+    assertEqual( (*@\vdmnotcovered{gclass}@*).(*@\vdmnotcovered{getEmptySpace}@*)(), (*@\vdmnotcovered{9}@*));         -- 9 spots left
+    
+     -- add 9 participants
+     while i<(*@\vdmnotcovered{9}@*) do(*@\vdmnotcovered{(}@*)
+       dcl user:Member := new (*@\vdmnotcovered{TestUser}@*)().(*@\vdmnotcovered{newMember}@*)();
+       (*@\vdmnotcovered{gclass}@*).addParticipant((*@\vdmnotcovered{user}@*));
+       i:= i(*@\vdmnotcovered{+}@*)(*@\vdmnotcovered{1}@*);
+    ); 
+       
+    (*@\vdmnotcovered{assertEqual}@*)( card gclass.getParticipants(), (*@\vdmnotcovered{9}@*));
+    (*@\vdmnotcovered{assertEqual}@*)( gclass.(*@\vdmnotcovered{getEmptySpace}@*)(), (*@\vdmnotcovered{0}@*));
+    
+    gclass.addParticipant(new TestUser().(*@\vdmnotcovered{newMember}@*)()); -- breaks pre-condition
+ );
+ 
+ 
+ -- Runs all the tests associated with a gym class
+(*@
+\label{test:128}
+@*)
+ public test: () ==> ()
+ test() == (
+  
+   createGymClass();
+    addParticipants();
+    
+    /***** TEST CASES WITH INVALID INPUTS ******/
+    --removeNonExistingParticipant();
+    --changeClassName();
+    --addSameParticipant();
+    --addParticipantFullClass();
+ );
+
+ 
+end TestGymClass
+\end{vdmpp}
+\bigskip
+\begin{longtable}{|l|r|r|r|}
+\hline
+Function or operation & Line & Coverage & Calls \\
+\hline
+\hline
+\hyperref[addParticipantFullClass:103]{addParticipantFullClass} & 103&0.0\% & 0 \\
+\hline
+\hyperref[addParticipants:34]{addParticipants} & 34&100.0\% & 3 \\
+\hline
+\hyperref[addSameParticipant:78]{addSameParticipant} & 78&0.0\% & 0 \\
+\hline
+\hyperref[changeClassName:62]{changeClassName} & 62&0.0\% & 0 \\
+\hline
+\hyperref[createGymClass:12]{createGymClass} & 12&100.0\% & 3 \\
+\hline
+\hyperref[newGymClass:5]{newGymClass} & 5&100.0\% & 6 \\
+\hline
+\hyperref[removeNonExistingParticipant:93]{removeNonExistingParticipant} & 93&0.0\% & 0 \\
+\hline
+\hyperref[test:128]{test} & 128&100.0\% & 3 \\
+\hline
+\hline
+TestGymClass.vdmpp & & 58.5\% & 15 \\
+\hline
+\end{longtable}
+

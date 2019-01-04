@@ -1,0 +1,80 @@
+\begin{vdmpp}[breaklines=true]
+class Exercise
+types
+ public ExerciseType = <Leg> | <Arm> | <Ab>;
+instance variables
+ 
+ protected load:nat;
+ protected repetitions:nat1;
+ protected type:ExerciseType;
+ protected description:seq of char;
+ 
+ inv len description> 0 and len description < 100;
+ 
+operations
+ 
+ -- Constructor
+(*@
+\label{Exercise:16}
+@*)
+ public Exercise: nat * nat1 * ExerciseType * seq of char ==> Exercise
+ Exercise(l, r, t, d) == (
+  
+  load := l;
+  repetitions := r;
+  type := t;
+  description := d;
+ )
+ pre len d > 0 and len d < 100;
+ 
+  -- Get Load
+(*@
+\label{getLoad:27}
+@*)
+  public getLoad:() ==> nat
+  getLoad() == return load;
+  
+  -- Get Repetitions
+(*@
+\label{getRepetitions:31}
+@*)
+  public getRepetitions:() ==> nat
+  getRepetitions() == return repetitions;
+  
+  -- Get Type
+(*@
+\label{getType:35}
+@*)
+  public getType:() ==> ExerciseType
+  getType() == return type;
+  
+  -- Get Description
+(*@
+\label{getDescription:39}
+@*)
+  public getDescription:() ==> seq of char
+  getDescription() == return description;
+  
+end Exercise
+\end{vdmpp}
+\bigskip
+\begin{longtable}{|l|r|r|r|}
+\hline
+Function or operation & Line & Coverage & Calls \\
+\hline
+\hline
+\hyperref[Exercise:16]{Exercise} & 16&100.0\% & 36 \\
+\hline
+\hyperref[getDescription:39]{getDescription} & 39&100.0\% & 3 \\
+\hline
+\hyperref[getLoad:27]{getLoad} & 27&100.0\% & 3 \\
+\hline
+\hyperref[getRepetitions:31]{getRepetitions} & 31&100.0\% & 3 \\
+\hline
+\hyperref[getType:35]{getType} & 35&100.0\% & 3 \\
+\hline
+\hline
+Exercise.vdmpp & & 100.0\% & 48 \\
+\hline
+\end{longtable}
+

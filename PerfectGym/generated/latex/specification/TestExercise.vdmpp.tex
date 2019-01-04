@@ -1,0 +1,59 @@
+\begin{vdmpp}[breaklines=true]
+class TestExercise is subclass of MyTest
+types
+operations
+ 
+ 
+(*@
+\label{newExercise:6}
+@*)
+  public newExercise: () ==> Exercise
+ newExercise() == (
+  return new Exercise(4, 6, <Leg>, "leg workout");
+ );
+ 
+ 
+(*@
+\label{createExercise:12}
+@*)
+ private createExercise: () ==> ()
+ createExercise() == (
+    
+    dcl exercise:Exercise  := newExercise();
+    assertEqual(exercise.getLoad(), 4);
+    assertEqual(exercise.getRepetitions(), 6);
+    assertEqual(exercise.getType(), <Leg>);
+    assertEqual(exercise.getDescription(), "leg workout");
+ );
+ 
+ 
+(*@
+\label{test:23}
+@*)
+ public test: () ==> ()
+ test() == (
+  
+   createExercise();
+ 
+ );
+
+ 
+end TestExercise
+\end{vdmpp}
+\bigskip
+\begin{longtable}{|l|r|r|r|}
+\hline
+Function or operation & Line & Coverage & Calls \\
+\hline
+\hline
+\hyperref[createExercise:12]{createExercise} & 12&100.0\% & 3 \\
+\hline
+\hyperref[newExercise:6]{newExercise} & 6&100.0\% & 3 \\
+\hline
+\hyperref[test:23]{test} & 23&100.0\% & 3 \\
+\hline
+\hline
+TestExercise.vdmpp & & 100.0\% & 9 \\
+\hline
+\end{longtable}
+

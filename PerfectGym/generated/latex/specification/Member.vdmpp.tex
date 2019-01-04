@@ -1,0 +1,156 @@
+\begin{vdmpp}[breaklines=true]
+class Member is subclass of User
+types
+values
+
+instance variables
+ 
+ -- Member's train plan
+ private trainingPlan : [Plan] := nil;
+ 
+ -- Member's weight
+ private weight: real;
+ 
+ -- Member's height
+ private height: real;
+ 
+ inv weight > 0 and height > 0;
+ 
+ --User's referral
+ private referral: int;
+
+ -- Member's birth year
+ private birthYear: nat1;
+ 
+ 
+operations
+
+ -- Constructor
+(*@
+\label{Member:28}
+@*)
+ public Member : seq of char * seq of char * seq of char * Gender * nat1 * real * real * seq of char ==> Member
+ Member (fName, lName, mail, g, year, w, h, pass) == (
+   
+  weight:= w;
+  height:= h;
+  birthYear:= year;
+  referral := 0;
+  User(fName, lName, mail, g, pass);
+ )
+ pre w >0 and h > 0;
+
+ -- Set member's training plan
+(*@
+\label{addTrainingPlan:40}
+@*)
+ public addTrainingPlan: Plan ==> ()
+ addTrainingPlan(plan) == (
+  trainingPlan := plan;
+ );
+ 
+ -- Get member's training plan
+(*@
+\label{getTrainingPlan:46}
+@*)
+ public pure getTrainingPlan: () ==> [Plan]
+ getTrainingPlan() == return trainingPlan;
+ 
+ -- Get member weight
+(*@
+\label{getWeight:50}
+@*)
+ public getWeight: () ==> real
+ getWeight() == return weight;
+ 
+ -- Get member height
+(*@
+\label{getHeight:54}
+@*)
+ public getHeight: () ==> real
+ getHeight() == return height;  
+ 
+ -- Set member weight
+(*@
+\label{setWeight:58}
+@*)
+ public setWeight:real ==> ()
+ setWeight(w) ==  weight:=w
+  pre w > 0
+  post weight=w;
+ 
+ -- Set member height
+(*@
+\label{setHeight:64}
+@*)
+ public setHeight: real ==> ()
+ setHeight(h) == height:= h
+  pre h > 0
+  post height = h; 
+ 
+ -- Returns the user's referrals
+(*@
+\label{getReferrals:70}
+@*)
+ public getReferrals: () ==> int
+ getReferrals() ==
+  return referral;
+ 
+ -- Increase user's referrals
+(*@
+\label{setReferrals:75}
+@*)
+ public setReferrals: () ==> ()
+ setReferrals() == (
+  referral := referral + 1;
+ );
+ 
+ -- Get member's monthly due
+(*@
+\label{getMonthly:81}
+@*)
+ public getMonthly: () ==> nat
+ getMonthly() == (
+  dcl age:nat := 2018 - birthYear;
+  dcl ageDiscount:nat := 0;
+  dcl monthly:nat;
+  
+  if age > 60 or age < 20
+   then (ageDiscount := 1);
+  monthly := floor (30 - 30 * getReferrals() / 30 - ageDiscount * 2/10 * 30);
+  return monthly;
+ );
+ 
+end Member
+\end{vdmpp}
+\bigskip
+\begin{longtable}{|l|r|r|r|}
+\hline
+Function or operation & Line & Coverage & Calls \\
+\hline
+\hline
+\hyperref[Member:28]{Member} & 28&100.0\% & 48 \\
+\hline
+\hyperref[addTrainingPlan:40]{addTrainingPlan} & 40&100.0\% & 3 \\
+\hline
+\hyperref[getHeight:54]{getHeight} & 54&100.0\% & 18 \\
+\hline
+\hyperref[getMonthly:81]{getMonthly} & 81&100.0\% & 6 \\
+\hline
+\hyperref[getReferrals:70]{getReferrals} & 70&100.0\% & 9 \\
+\hline
+\hyperref[getTrainingPlan:46]{getTrainingPlan} & 46&100.0\% & 6 \\
+\hline
+\hyperref[getWeight:50]{getWeight} & 50&100.0\% & 18 \\
+\hline
+\hyperref[setHeight:64]{setHeight} & 64&100.0\% & 6 \\
+\hline
+\hyperref[setReferrals:75]{setReferrals} & 75&100.0\% & 6 \\
+\hline
+\hyperref[setWeight:58]{setWeight} & 58&100.0\% & 6 \\
+\hline
+\hline
+Member.vdmpp & & 100.0\% & 126 \\
+\hline
+\end{longtable}
+

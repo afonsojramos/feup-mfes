@@ -1,0 +1,111 @@
+\begin{vdmpp}[breaklines=true]
+class Utilities
+operations
+
+--Check is a gym class is before another
+(*@
+\label{isBefore:5}
+@*)
+private static isBefore: GymClass * GymClass ==> bool
+isBefore(gclass1, gclass2) == (
+ 
+ if (gclass1.getTime().hour < gclass2.getTime().hour) then (
+  return true
+ )
+ else if (gclass1.getTime().hour > gclass2.getTime().hour) then (
+  return false
+ )
+ else ( --check minutes
+ 
+  if(gclass1.getTime().minute < gclass2.getTime().minute)
+     then (*@\vdmnotcovered{return}@*) (*@\vdmnotcovered{true}@*) else return false
+ ) 
+);
+
+ -- Check if a class is in the same schedule  
+(*@
+\label{overlapClasses:22}
+@*)
+ public static pure overlapClasses: GymClass * set of GymClass ==> bool
+ overlapClasses(gclass, classes) == (
+  
+  for all gymclass in set classes do(
+   
+   if( gymclass.getDate() = gclass.getDate()) then ( --same day of week
+    
+    let time1 = Utilities`timeToMinutes(gymclass.getTime().hour, gymclass.getTime().minute) ,
+       time2 =  Utilities`timeToMinutes(gclass.getTime().hour, gclass.getTime().minute)  in (
+      
+     if( time1 < (time2 + gclass.getDuration()) and time2 < (time1 + gymclass.getDuration()) )then
+       return (*@\vdmnotcovered{true}@*);
+     )
+   )
+  );
+  return false;
+ );  
+  
+--Sort gym classes by time
+(*@
+\label{insertionSort:41}
+@*)
+public static insertionSort: seq of GymClass ==> seq of GymClass 
+insertionSort(list) == (
+ 
+ dcl i:nat:=1;
+ dcl j:nat;
+ dcl key:GymClass;
+ dcl n:nat := len list;
+ 
+ dcl result: seq of GymClass:= []; --ordered list
+ result:= list;
+ 
+ while ( i <= n ) do (
+  
+  key:= result(i);
+  j:= i - 1;
+
+  while( j>=1 and isBefore(key, result(j))) do( 
+  
+   result(j+1):= result(j);
+   j:= j - 1;
+  
+  );
+  
+   result(j+1):= key;
+  i:= i +1;
+ );
+ 
+  return result;
+);
+
+functions
+--Time in minutes
+(*@
+\label{timeToMinutes:73}
+@*)
+public timeToMinutes: nat * nat -> nat
+timeToMinutes (hour, minute) == (
+ (hour * 60) + minute
+);
+
+end Utilities
+\end{vdmpp}
+\bigskip
+\begin{longtable}{|l|r|r|r|}
+\hline
+Function or operation & Line & Coverage & Calls \\
+\hline
+\hline
+\hyperref[insertionSort:41]{insertionSort} & 41&100.0\% & 99 \\
+\hline
+\hyperref[isBefore:5]{isBefore} & 5&94.4\% & 63 \\
+\hline
+\hyperref[overlapClasses:22]{overlapClasses} & 22&95.5\% & 21 \\
+\hline
+\hyperref[timeToMinutes:73]{timeToMinutes} & 73&100.0\% & 28 \\
+\hline
+\hline
+Utilities.vdmpp & & 97.0\% & 211 \\
+\hline
+\end{longtable}
+

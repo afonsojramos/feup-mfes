@@ -1,0 +1,43 @@
+\begin{vdmpp}[breaklines=true]
+class Main is subclass of MyTest
+types
+operations
+
+(*@
+\label{main:5}
+@*)
+ public static main: () ==> ()
+ main() == (
+   
+    -- test user
+   new TestUser().test();
+   
+   --test perfectgym
+   new TestPerfectGym().test();
+   
+   --test gymclass
+   new TestGymClass().test();
+   
+   --test exercise
+   new TestExercise().test();
+   
+   --test training plan
+   new TestPlan().test();
+ );
+
+ 
+end Main
+\end{vdmpp}
+\bigskip
+\begin{longtable}{|l|r|r|r|}
+\hline
+Function or operation & Line & Coverage & Calls \\
+\hline
+\hline
+\hyperref[main:5]{main} & 5&100.0\% & 6 \\
+\hline
+\hline
+Main.vdmpp & & 100.0\% & 6 \\
+\hline
+\end{longtable}
+

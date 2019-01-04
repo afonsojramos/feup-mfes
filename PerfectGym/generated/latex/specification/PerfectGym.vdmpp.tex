@@ -1,0 +1,440 @@
+\begin{vdmpp}[breaklines=true]
+class PerfectGym
+instance variables
+ 
+ -- Users
+ users: map nat1 to User;
+ loggedinUser : [User];
+ 
+ -- Gym classes 
+ classes: set of GymClass;
+ 
+ -- Invariants 
+ -- No two users with the same ID
+ inv not exists u1, u2 in set rng users & u1 <> u2 and u1.getNumber() = u2.getNumber();
+ 
+ -- Consistent map 
+ inv forall number in set dom users & users(number).getNumber()=number;
+
+ -- No two gym classes with the same name
+ inv not exists c1, c2 in set classes & c1 <> c1 and c1.getName() = c2.(*@\vdmnotcovered{getName}@*)();   
+ 
+ -- Logged user belongs to users
+ inv loggedinUser<>nil => loggedinUser in set rng users;
+ 
+operations
+
+ -- Constructor
+(*@
+\label{PerfectGym:27}
+@*)
+ public PerfectGym : () ==> PerfectGym
+ PerfectGym () == (
+  users := {|->};
+  classes := {};
+  loggedinUser := nil;
+ );
+ 
+ -- Login member
+(*@
+\label{loginMember:35}
+@*)
+  public loginMember: nat1 * seq of char ==> bool
+  loginMember(membershipnumber, pass) == (
+   
+   if(userRegistered(membershipnumber)) then (
+    
+    dcl user:User := users(membershipnumber);
+    
+    if( user.getPassword() = pass ) then (
+     loggedinUser := user;
+     return true;
+    )
+   
+   );
+   
+   return false;
+  )
+  pre len pass > 0 and len pass < 20 and loggedinUser = nil          -- only one user at a time
+  post ( RESULT = true and loggedinUser <> nil) or RESULT = false;
+ 
+  -- Log out member
+(*@
+\label{logoutMember:55}
+@*)
+  public logoutMember: () ==> ()
+  logoutMember() == loggedinUser := nil
+  pre loggedinUser <> nil
+  post loggedinUser = nil;
+ 
+ 
+  -- Get loggedinUser
+(*@
+\label{getLoggedUser:62}
+@*)
+  public pure getLoggedUser: () ==> [User]
+  getLoggedUser() == (
+    return loggedinUser;
+  );
+    
+  -- Get users
+(*@
+\label{getUsers:68}
+@*)
+  public getUsers: () ==> set of User
+  getUsers() == (
+    return rng users;
+  );
+
+  -- Checks if there is a user with a given membership number
+(*@
+\label{userRegistered:74}
+@*)
+  public userRegistered: nat1 ==> bool
+  userRegistered(number) == (
+    return number in set dom users;
+  );
+  
+  --Checks if a user exists
+(*@
+\label{userExists:80}
+@*)
+  public pure userExists: User ==> bool
+  userExists(user) == (
+    return user in set rng users;
+  );
+  
+  -- Add a user if there is no user with the same membership number
+(*@
+\label{addUser:86}
+@*)
+  public addUser : User ==> bool
+  addUser(u) == (
+   
+   if( not userRegistered(u.getNumber())) then (
+     
+     --add user 
+     users := users munion { u.getNumber() |-> u };
+    
+    return true;
+   
+   ); 
+   return false;
+  ) 
+  post ( RESULT = true and users = users~ munion { u.getNumber() |-> u } ) or ( RESULT = false and users = users~ ); 
+  
+  -- Add a user if there is no user with the same membership number and has referral
+(*@
+\label{addUserReferral:102}
+@*)
+  public addUserReferral : Member * User ==> bool
+  addUserReferral(r,u) == (
+   
+   if( not userRegistered(u.getNumber())) then (
+     
+     --add user 
+     users := users munion { u.getNumber() |-> u };
+     r.setReferrals();
+    
+    return true;
+   
+   ); 
+   return false;
+  ) 
+ pre userExists(r)
+  post ( RESULT = true and users = users~ munion { u.getNumber() |-> u } ) or ( RESULT = false and users = users~ ); 
+
+
+ -- Get classes
+(*@
+\label{getClasses:121}
+@*)
+ public getClasses: () ==> set of GymClass
+ getClasses()==(
+  return classes;
+ );
+ 
+ -- Checks if there is a class with the same name
+(*@
+\label{classRegistered:127}
+@*)
+ public pure classRegistered: GymClass ==> bool
+ classRegistered(gclass) == (
+  
+  dcl name: seq of char := gclass.getName();
+  for all gymclass in set classes do(
+  
+   if( gymclass.getName() = name) then (
+    
+    return true;
+    
+   );
+  );
+  return false;
+ );
+ 
+ -- Add a class if there is no class with the same name
+(*@
+\label{addClass:143}
+@*)
+ public addClass: GymClass ==> ()
+ addClass (gclass) == (
+  classes:= classes union {gclass};
+ )
+ pre gclass not in set classes 
+  and not classRegistered(gclass) 
+  and userExists(gclass.getProfessor()) 
+  and Utilities`overlapClasses(gclass, classes)= false
+ post classes = classes~ union {gclass};
+ 
+ 
+ --Remove a class 
+(*@
+\label{removeClass:155}
+@*)
+ public removeClass: GymClass ==> ()
+ removeClass(gclass) == (
+  classes:= classes \ {gclass};
+ )
+ pre gclass in set classes
+ post classes = classes~ \ {gclass};
+ 
+ 
+ -- Get gym classes schedule
+(*@
+\label{getSchedule:164}
+@*)
+ public getSchedule: () ==> map GymClass`Day_week to seq of GymClass
+ getSchedule() == (
+ 
+  dcl result: map GymClass`Day_week to seq of GymClass := {|->}; 
+ 
+  for all gclass in set classes do(
+   
+   dcl dayWeek: GymClass`Day_week := gclass.getDate();
+   
+   if(dayWeek not in set dom result) then (
+    
+    result:= result ++ {dayWeek|->[gclass]};
+    
+   )else(
+    
+    dcl list_aux:seq of GymClass := result(dayWeek);
+    
+    result:= result ++ {dayWeek|->list_aux ^ [gclass]};
+   );
+  );
+  
+  --order by time 
+  for all day in set dom result do( 
+   result(day):= Utilities`insertionSort(result(day));
+  );
+  
+  return result;
+ );
+ 
+ -- Get gym classes in a given week day
+ public getSchedule: (GymClass`Day_week ) ==> map GymClass`Day_week to seq of GymClass
+ getSchedule(day) == (
+ 
+   return {day} <: getSchedule();
+ );
+ 
+ 
+ -- Get gym schedule of a class type
+(*@
+\label{getSchedule2:202}
+@*)
+ public getSchedule2: (GymClass`ClassType) ==> map GymClass`Day_week to seq of GymClass`Time
+ getSchedule2(type) == (
+ 
+  dcl tmp: map GymClass`Day_week to seq of GymClass := getSchedule();
+  dcl result: map GymClass`Day_week to seq of GymClass`Time := {|->};
+  
+  --get times
+  
+  for all day in set dom tmp do( 
+    
+    dcl gclasses:seq of GymClass := tmp(day);
+    dcl times:seq of GymClass`Time:= [];
+    
+    dcl i:nat1:=1;
+    while i < len gclasses + 1 do(
+     
+     dcl gclass:GymClass := gclasses(i); 
+      
+     if(gclass.getType() = type) then(
+      times := times ^ [gclass.getTime()];
+     );
+     
+     i:= i +1; 
+    );
+    
+    if(len times > 0) then
+    result:= result ++ {day|->times};
+  );
+   
+  return result;
+ );
+ 
+ -- Get gym classes of a professor
+ public getClasses: Professor ==> set of GymClass
+ getClasses(prof) == (
+  
+  dcl result: set of GymClass:= {};
+  
+  for all gc in set classes do(
+   
+   if(prof = gc.getProfessor()) then result:= result union {gc};
+    
+  );
+  return result;
+ );
+ 
+  ---------------------------------------------------------------------
+  ------------------ When the member is logged in ---------------------
+  ---------------------------------------------------------------------
+  
+ -- Enroll member in a gym class
+(*@
+\label{enrollGymClass:253}
+@*)
+ public enrollGymClass: Member * GymClass ==> ()
+ enrollGymClass(member, gclass) == ( 
+  gclass.addParticipant(member); 
+ )
+ pre getLoggedUser() = member and gclass in set classes
+ post member in set gclass.getParticipants();
+ 
+ 
+ -- Remove member from a gym class
+(*@
+\label{removeUserGymClass:262}
+@*)
+ public removeUserGymClass: Member * GymClass ==> ()
+ removeUserGymClass(member, gclass) == (
+  gclass.removeParticipant(member);
+ )
+ pre getLoggedUser() = member and gclass in set classes
+ post member not in set gclass.getParticipants();
+ 
+
+ -- Get gym classes of a member
+ public getClasses: Member ==> set of GymClass
+ getClasses(member) == (
+  
+  dcl result: set of GymClass:= {};
+  
+  for all gc in set classes do(
+   
+   if(member in set gc.getParticipants()) then result:= result union {gc};
+    
+  );
+  return result;
+ )
+ pre getLoggedUser() = member;
+ 
+ -- Get training plan  
+(*@
+\label{getPlan:286}
+@*)
+ public getPlan: Member ==> [Plan]
+ getPlan(member) == (
+  
+  return member.getTrainingPlan();
+ )
+ pre getLoggedUser() = member;
+ 
+ 
+ --Edit weight and height
+ 
+(*@
+\label{editWeight:296}
+@*)
+ public editWeight:Member * real ==> ()
+ editWeight(m, w) ==  (
+  m.setWeight(w)
+ ) 
+ pre getLoggedUser() = m;
+  
+(*@
+\label{editHeight:302}
+@*)
+  public editHeight:Member * real ==> ()
+ editHeight(m, h) ==  (
+  m.setHeight(h)
+ ) 
+ pre getLoggedUser() = m;
+ 
+ 
+ 
+  ---------------------------------------------------------------------
+  ------------------ When the professor is logged in ---------------------
+  ---------------------------------------------------------------------
+
+ -- Create a training plan for a member
+(*@
+\label{createTrainingPlan:315}
+@*)
+ public createTrainingPlan: Professor * Member * Plan ==> ()
+ createTrainingPlan(professor, member, plan) == (
+   member.addTrainingPlan(plan);
+ )
+ pre getLoggedUser() = professor and userExists(member)
+ post member.getTrainingPlan() = plan;
+ 
+end PerfectGym
+\end{vdmpp}
+\bigskip
+\begin{longtable}{|l|r|r|r|}
+\hline
+Function or operation & Line & Coverage & Calls \\
+\hline
+\hline
+\hyperref[PerfectGym:27]{PerfectGym} & 27&100.0\% & 42 \\
+\hline
+\hyperref[addClass:143]{addClass} & 143&100.0\% & 42 \\
+\hline
+\hyperref[addUser:86]{addUser} & 86&100.0\% & 108 \\
+\hline
+\hyperref[addUserReferral:102]{addUserReferral} & 102&100.0\% & 3 \\
+\hline
+\hyperref[classRegistered:127]{classRegistered} & 127&100.0\% & 3 \\
+\hline
+\hyperref[createTrainingPlan:315]{createTrainingPlan} & 315&100.0\% & 3 \\
+\hline
+\hyperref[editHeight:302]{editHeight} & 302&100.0\% & 3 \\
+\hline
+\hyperref[editWeight:296]{editWeight} & 296&100.0\% & 6 \\
+\hline
+\hyperref[enrollGymClass:253]{enrollGymClass} & 253&100.0\% & 9 \\
+\hline
+\hyperref[getClasses:121]{getClasses} & 121&100.0\% & 12 \\
+\hline
+\hyperref[getLoggedUser:62]{getLoggedUser} & 62&100.0\% & 81 \\
+\hline
+\hyperref[getPlan:286]{getPlan} & 286&100.0\% & 3 \\
+\hline
+\hyperref[getSchedule:164]{getSchedule} & 164&100.0\% & 3 \\
+\hline
+\hyperref[getSchedule2:202]{getSchedule2} & 202&100.0\% & 36 \\
+\hline
+\hyperref[getUsers:68]{getUsers} & 68&100.0\% & 18 \\
+\hline
+\hyperref[loginMember:35]{loginMember} & 35&100.0\% & 42 \\
+\hline
+\hyperref[logoutMember:55]{logoutMember} & 55&100.0\% & 6 \\
+\hline
+\hyperref[removeClass:155]{removeClass} & 155&100.0\% & 3 \\
+\hline
+\hyperref[removeUserGymClass:262]{removeUserGymClass} & 262&100.0\% & 3 \\
+\hline
+\hyperref[userExists:80]{userExists} & 80&100.0\% & 84 \\
+\hline
+\hyperref[userRegistered:74]{userRegistered} & 74&100.0\% & 87 \\
+\hline
+\hline
+PerfectGym.vdmpp & & 99.3\% & 597 \\
+\hline
+\end{longtable}
+
