@@ -59,14 +59,21 @@ public class CommandLineInterface {
         GymClass gclass3 = new GymClass("zumba I", "Zumba", "zumba class", 10, prof, "Monday", new GymClass.Time(20, 30), 90);
         GymClass gclass4 = new GymClass("cycling II", "Cycling", "cycling class", 10, prof, "Saturday", new GymClass.Time(9, 40), 60);
         GymClass gclass6 = new GymClass("cycling3", "Cycling", "cycling class", 10, prof, "Monday", new GymClass.Time(8, 50), 45);
-        perfectGym.addUser(new Member("Claudia", "Rodrigues", "up201508262@fe.up.pt", "Feminine", 1997, 50, 1.67, "qwerty1234"));
-        perfectGym.addUser(new Member("Afonso", "Ramos", "up201506239@fe.up.pt", "Masculine", 1950, 75, 1.91, "qwerty1234"));
+        Member user1 = new Member("Claudia", "Rodrigues", "up201508262@fe.up.pt", "Feminine", 1997, 50, 1.67, "a");
+        perfectGym.addUser(user1);
+        perfectGym.addUser(new Member("Afonso", "Ramos", "up201506239@fe.up.pt", "Masculine", 1950, 75, 1.91, "a"));
         perfectGym.addClass(gclass1);
         perfectGym.addClass(gclass2);
         perfectGym.addClass(gclass3);
         perfectGym.addClass(gclass4);
         perfectGym.addClass(gclass5);
         perfectGym.addClass(gclass6);
+        Exercise exercise1 =
+            new Exercise(4, 10, "Leg", "leg workout");
+        Exercise exercise2 =
+            new Exercise(2, 15, "Arm", "arm workout");
+        Plan plan = new Plan(SeqUtil.seq(exercise1, exercise2), prof);
+        perfectGym.createTrainingPlan(prof, user1, plan);
         
     }
 
@@ -336,7 +343,21 @@ public class CommandLineInterface {
                     return null;
                 }));
                 SchedulingMenuEntries.add(new SimpleEntry<>("My Plan", () -> { 
-                    perfectGym.getPlan((Member)perfectGym.getLoggedUser());
+                    System.out.print("\n | Exercise | Load | Repetitions |    Type    |      Description\n");
+                    for (Iterator iter2 = SeqUtil.inds((VDMSeq) perfectGym.getPlan((Member)perfectGym.getLoggedUser()).getExercises()).iterator(); iter2.hasNext(); ) {
+                        Object exercise = (Object) iter2.next();
+                        System.out.print( " | " + printWithWhitespace(exercise.toString()," Exercise ".length())
+                            + " | " +
+                            printWithWhitespace(((Exercise) Utils.get((VDMSeq) perfectGym.getPlan((Member)perfectGym.getLoggedUser()).getExercises(), exercise)).getLoad().toString()," Load ".length()) 
+                            + " | " + 
+                            printWithWhitespace(((Exercise) Utils.get((VDMSeq) perfectGym.getPlan((Member)perfectGym.getLoggedUser()).getExercises(), exercise)).getRepetitions().toString()," Repetitions ".length())
+                            + " | " +
+                            printWithWhitespace(((Exercise) Utils.get((VDMSeq) perfectGym.getPlan((Member)perfectGym.getLoggedUser()).getExercises(), exercise)).getType().toString(),"    Type    ".length()) 
+                            + " | " +
+                            printWithWhitespace(((Exercise) Utils.get((VDMSeq) perfectGym.getPlan((Member)perfectGym.getLoggedUser()).getExercises(), exercise)).getDescription().toString(),"      Description".length()) 
+                            + "\n"
+                        );
+                    }
                     reader.nextLine();
                     SchedulingMenu();
                     return null;
@@ -354,8 +375,33 @@ public class CommandLineInterface {
             } else if (perfectGym.getLoggedUser().getClass().getSimpleName().equals("Professor")) {
 
                 SchedulingMenuEntries.add(new SimpleEntry<>("Create Training Plan", () -> { 
-                    System.out.print(Utils.get(perfectGym.getUsers(), 2));
-                    System.out.print(perfectGym.getUsers().getClass());
+                    System.out.print("Number of Exercises in Plan: ");
+                    
+                    int num = Integer.parseInt(reader.nextLine());
+                    System.out.print("Exercise number " + (1) + ": \n");
+                    System.out.print("Load (if applicable): ");
+                    int load1 = Integer.parseInt(reader.nextLine());
+                    System.out.print("Repetitions: ");
+                    int rep1 = Integer.parseInt(reader.nextLine());
+                    System.out.print("Type: ");
+                    String type1 = reader.nextLine();
+                    System.out.print("Description: ");         
+                    String desc1 = reader.nextLine(); 
+                    Plan plan = new Plan(SeqUtil.seq(new Exercise(load1, rep1, type1, desc1)), (Professor)perfectGym.getLoggedUser());
+                    for (int i = 1; i < num; i++) {
+                        System.out.print("Exercise number " + (i+1) + ": \n");
+                        System.out.print("Load (if applicable): ");
+                        int load = Integer.parseInt(reader.nextLine());
+                        System.out.print("Repetitions: ");
+                        int rep = Integer.parseInt(reader.nextLine());
+                        System.out.print("Type: ");
+                        String type = reader.nextLine();
+                        System.out.print("Description: ");         
+                        String desc = reader.nextLine();        
+                        plan.addExercise(new Exercise(load, rep, type, desc));
+                    }
+                    System.out.print(plan);
+                    perfectGym.createTrainingPlan((Professor)perfectGym.getLoggedUser(), null, plan); //TODO
                     reader.nextLine();
                     SchedulingMenu();
                     return null;
