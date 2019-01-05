@@ -71,7 +71,7 @@ operations
  	);
 
  	-- Checks if there is a user with a given membership number
- 	public userRegistered: nat1 ==> bool
+ 	public pure userRegistered: nat1 ==> bool
  	userRegistered(number) == (
  			return number in set dom users;
  	);
@@ -86,7 +86,8 @@ operations
  	public getUser: nat1 ==> User
  	getUser(number) == (
  		return users(number);
- 	);
+ 	)
+ 	pre userRegistered(number);
  	
  	-- Add a user if there is no user with the same membership number
  	public addUser : User ==> bool
