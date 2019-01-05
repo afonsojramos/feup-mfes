@@ -82,6 +82,12 @@ operations
  			return user in set rng users;
  	);
  	
+ 	-- Get user according to membership number
+ 	public getUser: nat1 ==> User
+ 	getUser(number) == (
+ 		return users(number);
+ 	);
+ 	
  	-- Add a user if there is no user with the same membership number
  	public addUser : User ==> bool
  	addUser(u) == (
@@ -122,6 +128,17 @@ operations
 	getClasses()==(
 		return classes;
 	);
+	
+	-- Get gym class from name
+ 	public getGymClass: seq of char ==> [GymClass]
+ 	getGymClass(name) == (
+
+		for all gymclass in set classes do(
+			if( gymclass.getName() = name) then 
+				return gymclass;
+		);
+		return nil;
+ 	);
 	
 	-- Checks if there is a class with the same name
 	public pure classRegistered: GymClass ==> bool

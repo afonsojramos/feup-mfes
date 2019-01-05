@@ -28,6 +28,8 @@ operations
 			 assertTrue( gym.userExists(user));
 			 
 			 assertEqual( gym.getUsers(), {user});
+			 
+			 assertEqual( gym.getUser(user.getNumber()), user); 
 	);
 	
 	/*** USE CASE SCENARIO R03 - user can edit weight and height ***/ 
@@ -123,6 +125,7 @@ operations
 		gym.addClass(gclass); --add
 		assertEqual(gym.getClasses(), {gclass});
 		assertTrue(gym.classRegistered(gclass));
+		assertEqual(gym.getGymClass("cycling"), gclass);
 		
 		gym.removeClass(gclass); --remove
 		assertEqual(gym.getClasses(), {});
