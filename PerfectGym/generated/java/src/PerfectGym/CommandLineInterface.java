@@ -363,10 +363,17 @@ public class CommandLineInterface {
                     return null;
                 }));
                 SchedulingMenuEntries.add(new SimpleEntry<>("Enroll in Class", () -> {
-                    System.out.print("Activity: ");
-                    String activity = reader.nextLine();
-                    //perfectGym.enrollGymClass(perfectGym.getLoggedUser().getClass(), gclass1); //TODO
-                    System.out.print(perfectGym.getSchedule2(activity));
+                    System.out.print("Class: ");
+                    String class1 = reader.nextLine();
+                    //perfectGym.enrollGymClass((Member)perfectGym.getLoggedUser(), gclass1); //TODO
+                    reader.nextLine();
+                    SchedulingMenu();
+                    return null;
+                }));
+                SchedulingMenuEntries.add(new SimpleEntry<>("Quit from Class", () -> {
+                    System.out.print("Class: ");
+                    String class1 = reader.nextLine();
+                    //perfectGym.removeUserGymClass((Member)perfectGym.getLoggedUser(), gclass1); //TODO
                     reader.nextLine();
                     SchedulingMenu();
                     return null;
@@ -401,7 +408,7 @@ public class CommandLineInterface {
                         plan.addExercise(new Exercise(load, rep, type, desc));
                     }
                     System.out.print(plan);
-                    perfectGym.createTrainingPlan((Professor)perfectGym.getLoggedUser(), null, plan); //TODO
+                    //perfectGym.createTrainingPlan((Professor)perfectGym.getLoggedUser(), null, plan); //TODO
                     reader.nextLine();
                     SchedulingMenu();
                     return null;
