@@ -15,6 +15,7 @@ operations
 		assertEqual(gym.getClasses(), {});
 	);
 	
+	/*** USE CASE SCENARIO R01 - create user ***/ 
 	-- Test add user
 	private addUser: () ==> ()
 	addUser() == (
@@ -29,6 +30,7 @@ operations
 			 assertEqual( gym.getUsers(), {user});
 	);
 	
+	/*** USE CASE SCENARIO R03 - user can edit weight and height ***/ 
 	-- Test edit user
 	private editUser: () ==> ()
 	editUser() == (
@@ -53,6 +55,9 @@ operations
 			 assertTrue(user.getHeight() = 1.68);	
 			 
 	);
+	
+	/*** USE CASE SCENARIO R10 - create user with referral   
+         USE CASE SCENARIO R12 - consult monthly membership fee ***/
 	
 	-- Test add user with referral
 	private addUserReferral: () ==> ()
@@ -103,6 +108,7 @@ operations
 			 assertEqual( card gym.getUsers(), 1);
 	);
 	
+	/*** USE CASE SCENARIO R09 - add or remove gym classes **/
 	-- Test add/remove classes
 	private addGymClass: () ==> ()
 	addGymClass() == (
@@ -158,6 +164,10 @@ operations
 		assertEqual(gym.getClasses(), {gclass1, gclass2});
  	
 	);
+	
+	
+	/*** USE CASE SCENARIO R08 - user can see gym classes 
+        USE CASE SCENARIO R11 - user can see gym classes filtered by class type and week day **/
 	
 	-- Test gym schedule
 	private testGymSchedule: () ==> ()
@@ -223,7 +233,8 @@ operations
 		gym.addClass(gclass2);  --breaks pre condition
 		
 	);
- 
+ 	
+ 	/*** USE CASE SCENARIO R02 - login and logout user ***/
  	-- Test login
  	private testLogin: () ==> ()
 	testLogin() == (
@@ -259,6 +270,10 @@ operations
 	 
 	);
 	
+	
+	/*** USE CASE SCENARIO R04 - user can enroll in a class
+       USE CASE SCENARIO R03 - user can access enrolled classes ***/
+	
 	-- Test member add classes
 	public testAddGymClasses: () ==> ()
 	testAddGymClasses() == (
@@ -286,6 +301,7 @@ operations
  
 	);
 	
+	/*** USE CASE SCENARIO R04 - user can cancel a class **/
 	-- Test member remove classes
 	public testRemoveGymClasses: () ==> ()
 	testRemoveGymClasses() == (
@@ -323,6 +339,7 @@ operations
  		
 	);
 	
+	/** USE CASE SCENARIO R11 - user can see gym classes filtered by professor**/
 	-- Test professor classes
 	public testProfessorClasses: () ==> ()
 	testProfessorClasses() == (
@@ -368,6 +385,13 @@ operations
  		gym.enrollGymClass(user, gclass1);				-- breaks precondition (user not logged in)
  		 		
 	);
+	
+	
+	
+	/*** USE CASE SCENARIO R05 - professor can create a training plan for a member      
+			 USE CASE SCENARIO R03 - user can access training plan
+       USE CASE SCENARIO R06 - create exercises
+       USE CASE SCENARIO R07 - add or remove exercises from plan ***/
 	
 	-- Test add training plan
 	public testAddTrainingPlan: () ==> ()
