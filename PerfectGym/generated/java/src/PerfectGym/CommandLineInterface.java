@@ -307,7 +307,6 @@ public class CommandLineInterface {
                 return null;
             }));
             SchedulingMenuEntries.add(new SimpleEntry<>("Get All Classes", () -> {
-                System.out.print("\n" + perfectGym.getClasses());
 
                 System.out.print("\n  |    Name    |     Type     |     Description     |   Capacity   |  Professor  |    Date    |  Time  | Duration\n");
                 for (Iterator iter = ((VDMSet) perfectGym.getClasses()).iterator(); iter.hasNext(); ) {
@@ -365,17 +364,19 @@ public class CommandLineInterface {
                     return null;
                 }));
                 SchedulingMenuEntries.add(new SimpleEntry<>("Enroll in Class", () -> {
-                    System.out.print("Class: ");
+                    System.out.print("Class Name: ");
                     String class1 = reader.nextLine();
-                    //perfectGym.enrollGymClass((Member)perfectGym.getLoggedUser(), gclass1); //TODO
+                    perfectGym.enrollGymClass((Member)perfectGym.getLoggedUser(), perfectGym.getGymClass(class1));
+                    System.out.print( class1 + " Class Enrolled!");
                     reader.nextLine();
                     SchedulingMenu();
                     return null;
                 }));
                 SchedulingMenuEntries.add(new SimpleEntry<>("Quit from Class", () -> {
-                    System.out.print("Class: ");
+                    System.out.print("Class Name: ");
                     String class1 = reader.nextLine();
-                    //perfectGym.removeUserGymClass((Member)perfectGym.getLoggedUser(), gclass1); //TODO
+                    perfectGym.removeUserGymClass((Member)perfectGym.getLoggedUser(), perfectGym.getGymClass(class1));
+                    System.out.print( class1 + " Class Quitted!");
                     reader.nextLine();
                     SchedulingMenu();
                     return null;
@@ -410,7 +411,11 @@ public class CommandLineInterface {
                         plan.addExercise(new Exercise(load, rep, type, desc));
                     }
                     System.out.print(plan);
-                    //perfectGym.createTrainingPlan((Professor)perfectGym.getLoggedUser(), null, plan); //TODO
+
+                    System.out.print("User Membership ID: ");
+                    int userID = Integer.parseInt(reader.nextLine());
+                    perfectGym.createTrainingPlan((Professor)perfectGym.getLoggedUser(), (Member)perfectGym.getUser(userID), plan);
+                    System.out.print( "Plan Created For " + perfectGym.getUser(userID).getName() + "!");
                     reader.nextLine();
                     SchedulingMenu();
                     return null;
@@ -468,9 +473,10 @@ public class CommandLineInterface {
                     return null;
                 }));
                 SchedulingMenuEntries.add(new SimpleEntry<>("Remove Class", () -> { 
-                    System.out.print("Activity: ");
-                    String activity = reader.nextLine();
-                    //perfectGym.removeClass(gclass1); //TODO
+                    System.out.print("Class Name: ");
+                    String gclass1 = reader.nextLine();
+                    perfectGym.removeClass(perfectGym.getGymClass(gclass1));
+                    System.out.print( gclass1 + " Class Removed!");
                     reader.nextLine();
                     SchedulingMenu();
                     return null;
