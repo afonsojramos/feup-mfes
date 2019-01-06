@@ -177,7 +177,8 @@ public class CommandLineInterface {
         if (perfectGym.getLoggedUser() != null) {
             if (perfectGym.getLoggedUser().getClass().getSimpleName().equals("Member")){
                 AccountManagementMenuEntries.add(new SimpleEntry<>("Update Weight", () -> {
-                    System.out.print("New Weight: ");
+                    System.out.print("Old Weight: " + ((Member)perfectGym.getLoggedUser()).getWeight());
+                    System.out.print("\nNew Weight: ");
                     double weight = Double.parseDouble(reader.nextLine());
                     ((Member) perfectGym.getLoggedUser()).setWeight(weight);
                     printEmptyLines(EMPTY_LINES);
@@ -185,7 +186,8 @@ public class CommandLineInterface {
                     return null;
                 }));
                 AccountManagementMenuEntries.add(new SimpleEntry<>("Update Height", () -> {
-                    System.out.print("New Height: ");
+                    System.out.print("Old Height: " + ((Member)perfectGym.getLoggedUser()).getHeight());
+                    System.out.print("\nNew Height: ");
                     double height = Double.parseDouble(reader.nextLine());
                     ((Member) perfectGym.getLoggedUser()).setHeight(height);
                     printEmptyLines(EMPTY_LINES);
