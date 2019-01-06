@@ -126,6 +126,7 @@ operations
 		assertEqual(gym.getClasses(), {gclass});
 		assertTrue(gym.classRegistered(gclass));
 		assertEqual(gym.getGymClass("cycling"), gclass);
+		assertEqual(gym.getGymClass("sitting"), nil);
 		
 		gym.removeClass(gclass); --remove
 		assertEqual(gym.getClasses(), {});

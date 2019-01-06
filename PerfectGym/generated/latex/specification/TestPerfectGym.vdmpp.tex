@@ -22,9 +22,10 @@ operations
   assertEqual(gym.getClasses(), {});
  );
  
+ /*** USE CASE SCENARIO R01 - create user ***/ 
  -- Test add user
 (*@
-\label{addUser:19}
+\label{addUser:20}
 @*)
  private addUser: () ==> ()
  addUser() == (
@@ -37,11 +38,14 @@ operations
     assertTrue( gym.userExists(user));
     
     assertEqual( gym.getUsers(), {user});
+    
+    assertEqual( gym.getUser(user.getNumber()), user); 
  );
  
+ /*** USE CASE SCENARIO R03 - user can edit weight and height ***/ 
  -- Test edit user
 (*@
-\label{editUser:33}
+\label{editUser:37}
 @*)
  private editUser: () ==> ()
  editUser() == (
@@ -67,9 +71,12 @@ operations
     
  );
  
+ /*** USE CASE SCENARIO R10 - create user with referral   
+         USE CASE SCENARIO R12 - consult monthly membership fee ***/
+ 
  -- Test add user with referral
 (*@
-\label{addUserReferral:58}
+\label{addUserReferral:65}
 @*)
  private addUserReferral: () ==> ()
  addUserReferral() == (
@@ -99,7 +106,7 @@ operations
  
  -- Test add repeated user
 (*@
-\label{addRepeatedUser:85}
+\label{addRepeatedUser:92}
 @*)
  private addRepeatedUser: () ==> ()
  addRepeatedUser() == (
@@ -122,9 +129,10 @@ operations
     assertEqual( card gym.getUsers(), 1);
  );
  
+ /*** USE CASE SCENARIO R09 - add or remove gym classes **/
  -- Test add/remove classes
 (*@
-\label{addGymClass:107}
+\label{addGymClass:115}
 @*)
  private addGymClass: () ==> ()
  addGymClass() == (
@@ -139,36 +147,38 @@ operations
   gym.addClass(gclass); --add
   assertEqual(gym.getClasses(), {gclass});
   assertTrue(gym.classRegistered(gclass));
+  assertEqual(gym.getGymClass("cycling"), gclass);
+  assertEqual(gym.getGymClass("sitting"), nil);
   
   gym.removeClass(gclass); --remove
   assertEqual(gym.getClasses(), {});
  );
  
- -- Add class with same name
 (*@
-\label{addGymClassSameName:126}
+\label{addGymClassSameName:135}
 @*)
+ -- Add class with same name
  private addGymClassSameName: () ==> ()
  addGymClassSameName() == (*@\vdmnotcovered{(}@*)
   
   dcl gym:PerfectGym := (*@\vdmnotcovered{newGym}@*)();
   dcl user:Professor := new TestUser().(*@\vdmnotcovered{newProfessor}@*)();
-  dcl gclass1:GymClass := new GymClass("cycling", <Cycling>, "cycling class", 10, user, <Monday>, (*@\vdmnotcovered{mk\_GymClass`Time}@*)((*@\vdmnotcovered{15}@*),(*@\vdmnotcovered{20}@*)), (*@\vdmnotcovered{90}@*));
-  dcl gclass2:GymClass := new GymClass("cycling", <Cycling>, "fit class", 10, user, <Monday>, mk_GymClass`Time(08,(*@\vdmnotcovered{20}@*)), (*@\vdmnotcovered{90}@*));  
-  (*@\vdmnotcovered{assertTrue}@*) (gym.addUser((*@\vdmnotcovered{user}@*)));
+  dcl gclass1:GymClass := new GymClass("cycling", <Cycling>, "cycling class", 10, user, <Monday>, mk_GymClass`Time(15,(*@\vdmnotcovered{20}@*)), (*@\vdmnotcovered{90}@*));
+  dcl gclass2:GymClass := new GymClass("cycling", <Cycling>, "fit class", 10, user, <Monday>, mk_GymClass`Time(08,20), (*@\vdmnotcovered{90}@*));  
+  assertTrue (gym.addUser((*@\vdmnotcovered{user}@*)));
   
-  (*@\vdmnotcovered{assertEqual}@*)(gym.(*@\vdmnotcovered{getClasses}@*)(), (*@\vdmnotcovered{\{}@*)});
+  assertEqual(gym.(*@\vdmnotcovered{getClasses}@*)(), (*@\vdmnotcovered{\{}@*)});
   
   (*@\vdmnotcovered{gym}@*).addClass((*@\vdmnotcovered{gclass1}@*)); --add
-  (*@\vdmnotcovered{assertEqual}@*)((*@\vdmnotcovered{gym}@*).(*@\vdmnotcovered{getClasses}@*)(), {(*@\vdmnotcovered{gclass1}@*)});
+  (*@\vdmnotcovered{assertEqual}@*)(gym.(*@\vdmnotcovered{getClasses}@*)(), (*@\vdmnotcovered{\{}@*)(*@\vdmnotcovered{gclass1}@*)});
   
   gym.addClass((*@\vdmnotcovered{gclass2}@*)); --breaks pre-condition 
  );
  
- -- Test gym schedule
 (*@
-\label{testGymClasses:144}
+\label{testGymClasses:153}
 @*)
+ -- Test gym schedule
  private testGymClasses: () ==> ()
  testGymClasses() == (
   
@@ -187,10 +197,14 @@ operations
   
  );
  
- -- Test gym schedule
+ 
+ /*** USE CASE SCENARIO R08 - user can see gym classes 
+        USE CASE SCENARIO R11 - user can see gym classes filtered by class type and week day **/
+ 
 (*@
-\label{testGymSchedule:163}
+\label{testGymSchedule:176}
 @*)
+ -- Test gym schedule
  private testGymSchedule: () ==> ()
  testGymSchedule() == (
   
@@ -237,31 +251,32 @@ operations
  );
   
  
- -- Test overlap classes
 (*@
-\label{gymClassesTimeOverlap:210}
+\label{gymClassesTimeOverlap:223}
 @*)
+ -- Test overlap classes
  private gymClassesTimeOverlap: () ==> ()
  gymClassesTimeOverlap() == (*@\vdmnotcovered{(}@*)
   
   dcl gym:PerfectGym := (*@\vdmnotcovered{newGym}@*)();
   dcl user:Professor := (*@\vdmnotcovered{new}@*) (*@\vdmnotcovered{TestUser}@*)().(*@\vdmnotcovered{newProfessor}@*)();
-  dcl gclass1:GymClass:= new GymClass("cycling",  <Cycling>, (*@\vdmnotcovered{"cycling class"}@*), (*@\vdmnotcovered{10}@*), user, <Monday>, mk_GymClass`Time(15,20), (*@\vdmnotcovered{90}@*));
-  dcl gclass2:GymClass:= new GymClass("yoga", <Yoga>, "yoga class", 10, user, <Monday>, mk_GymClass`Time(16,(*@\vdmnotcovered{49}@*)), (*@\vdmnotcovered{90}@*));    
+  dcl gclass1:GymClass:= new GymClass("cycling",  <Cycling>, (*@\vdmnotcovered{"cycling class"}@*), (*@\vdmnotcovered{10}@*), user, (*@\vdmnotcovered{<Monday>}@*), (*@\vdmnotcovered{mk\_GymClass`Time}@*)(15,(*@\vdmnotcovered{20}@*)), (*@\vdmnotcovered{90}@*));
+  dcl gclass2:GymClass:= new GymClass("yoga", <Yoga>, (*@\vdmnotcovered{"yoga class"}@*), 10, (*@\vdmnotcovered{user}@*), (*@\vdmnotcovered{<Monday>}@*), (*@\vdmnotcovered{mk\_GymClass`Time}@*)((*@\vdmnotcovered{16}@*),(*@\vdmnotcovered{49}@*)), (*@\vdmnotcovered{90}@*));    
   
-  (*@\vdmnotcovered{assertTrue}@*) ((*@\vdmnotcovered{gym}@*).(*@\vdmnotcovered{addUser}@*)((*@\vdmnotcovered{user}@*)));
+  (*@\vdmnotcovered{assertTrue}@*) (gym.addUser((*@\vdmnotcovered{user}@*)));
   
-  (*@\vdmnotcovered{assertEqual}@*)(gym.(*@\vdmnotcovered{getClasses}@*)(), (*@\vdmnotcovered{\{}@*)});
-  (*@\vdmnotcovered{gym}@*).addClass((*@\vdmnotcovered{gclass1}@*));  
+  (*@\vdmnotcovered{assertEqual}@*)((*@\vdmnotcovered{gym}@*).(*@\vdmnotcovered{getClasses}@*)(), (*@\vdmnotcovered{\{}@*)});
+  gym.addClass((*@\vdmnotcovered{gclass1}@*));  
   assertEqual(gym.getClasses(), {(*@\vdmnotcovered{gclass1}@*)});
   gym.addClass((*@\vdmnotcovered{gclass2}@*));  --breaks pre condition
   
  );
- 
-  -- Test login
+  
+  /*** USE CASE SCENARIO R02 - login and logout user ***/
 (*@
-\label{testLogin:228}
+\label{testLogin:242}
 @*)
+  -- Test login
   private testLogin: () ==> ()
  testLogin() == (
   
@@ -277,10 +292,10 @@ operations
    
  );
  
- -- Test failed login
 (*@
-\label{testFailedLogin:244}
+\label{testFailedLogin:258}
 @*)
+ -- Test failed login
   private testFailedLogin: () ==> ()
  testFailedLogin() == (
     
@@ -299,10 +314,14 @@ operations
   
  );
  
- -- Test member add classes
+ 
+ /*** USE CASE SCENARIO R04 - user can enroll in a class
+       USE CASE SCENARIO R03 - user can access enrolled classes ***/
+ 
 (*@
-\label{testAddGymClasses:263}
+\label{testAddGymClasses:281}
 @*)
+ -- Test member add classes
  public testAddGymClasses: () ==> ()
  testAddGymClasses() == (
  
@@ -329,10 +348,11 @@ operations
  
  );
  
- -- Test member remove classes
+ /*** USE CASE SCENARIO R04 - user can cancel a class **/
 (*@
-\label{testRemoveGymClasses:290}
+\label{testRemoveGymClasses:309}
 @*)
+ -- Test member remove classes
  public testRemoveGymClasses: () ==> ()
  testRemoveGymClasses() == (
  
@@ -369,10 +389,11 @@ operations
    
  );
  
- -- Test professor classes
+ /** USE CASE SCENARIO R11 - user can see gym classes filtered by professor**/
 (*@
-\label{testProfessorClasses:327}
+\label{testProfessorClasses:347}
 @*)
+ -- Test professor classes
  public testProfessorClasses: () ==> ()
  testProfessorClasses() == (
  
@@ -389,42 +410,49 @@ operations
   
  );
  
- -- Test fail enroll class
 (*@
-\label{testFailEnrollGymClass:344}
+\label{testFailEnrollGymClass:364}
 @*)
+ -- Test fail enroll class
  public testFailEnrollGymClass: () ==> ()
  testFailEnrollGymClass() == (*@\vdmnotcovered{(}@*)
   
   dcl gym:PerfectGym := (*@\vdmnotcovered{newGym}@*)();
-  dcl prof:Professor := (*@\vdmnotcovered{new}@*) (*@\vdmnotcovered{TestUser}@*)().(*@\vdmnotcovered{newProfessor}@*)();
-  dcl gclass1:GymClass := (*@\vdmnotcovered{new}@*) GymClass((*@\vdmnotcovered{"cycling"}@*),<Cycling>, (*@\vdmnotcovered{"cycling class"}@*), 10, prof, <Monday>, mk_GymClass`Time(15,20), (*@\vdmnotcovered{90}@*));
+  dcl prof:Professor := new (*@\vdmnotcovered{TestUser}@*)().(*@\vdmnotcovered{newProfessor}@*)();
+  dcl gclass1:GymClass := new GymClass("cycling",<Cycling>, "cycling class", (*@\vdmnotcovered{10}@*), (*@\vdmnotcovered{prof}@*), (*@\vdmnotcovered{<Monday>}@*), (*@\vdmnotcovered{mk\_GymClass`Time}@*)(15,(*@\vdmnotcovered{20}@*)), (*@\vdmnotcovered{90}@*));
  
-  dcl user:Member := (*@\vdmnotcovered{new}@*) TestUser().(*@\vdmnotcovered{newMember}@*)(); 
+  dcl user:Member := (*@\vdmnotcovered{new}@*) (*@\vdmnotcovered{TestUser}@*)().(*@\vdmnotcovered{newMember}@*)(); 
   
-  (*@\vdmnotcovered{assertTrue}@*)( gym.(*@\vdmnotcovered{addUser}@*)((*@\vdmnotcovered{user}@*)));
-  (*@\vdmnotcovered{assertTrue}@*)( gym.(*@\vdmnotcovered{addUser}@*)((*@\vdmnotcovered{prof}@*)));
+  assertTrue( (*@\vdmnotcovered{gym}@*).(*@\vdmnotcovered{addUser}@*)((*@\vdmnotcovered{user}@*)));
+  assertTrue( (*@\vdmnotcovered{gym}@*).(*@\vdmnotcovered{addUser}@*)((*@\vdmnotcovered{prof}@*)));
   
   -- 1. login user
-  assertEqual( gym.(*@\vdmnotcovered{getLoggedUser}@*)(), (*@\vdmnotcovered{nil}@*)); 
-  assertEqual( gym.loginMember(user.getNumber(), user.getPassword()), (*@\vdmnotcovered{true}@*));
-  (*@\vdmnotcovered{assertEqual}@*)( gym.getLoggedUser(), (*@\vdmnotcovered{user}@*));
+  (*@\vdmnotcovered{assertEqual}@*)( (*@\vdmnotcovered{gym}@*).(*@\vdmnotcovered{getLoggedUser}@*)(), (*@\vdmnotcovered{nil}@*)); 
+  (*@\vdmnotcovered{assertEqual}@*)( (*@\vdmnotcovered{gym}@*).(*@\vdmnotcovered{loginMember}@*)(user.getNumber(), user.(*@\vdmnotcovered{getPassword}@*)()), (*@\vdmnotcovered{true}@*));
+  assertEqual( gym.getLoggedUser(), (*@\vdmnotcovered{user}@*));
   
   -- 2. enroll in gym classes
   gym.enrollGymClass(user, (*@\vdmnotcovered{gclass1}@*));    -- breaks precondition (class not in the system)
     
    (*@\vdmnotcovered{gym}@*).logoutMember();
-   (*@\vdmnotcovered{assertEqual}@*)( gym.getLoggedUser(), (*@\vdmnotcovered{nil}@*)); 
+   assertEqual( gym.(*@\vdmnotcovered{getLoggedUser}@*)(), (*@\vdmnotcovered{nil}@*)); 
    
-   gym.addClass( (*@\vdmnotcovered{gclass1}@*)); 
-   gym.enrollGymClass(user, (*@\vdmnotcovered{gclass1}@*));    -- breaks precondition (user not logged in)
+   (*@\vdmnotcovered{gym}@*).addClass( (*@\vdmnotcovered{gclass1}@*)); 
+   (*@\vdmnotcovered{gym}@*).enrollGymClass((*@\vdmnotcovered{user}@*), (*@\vdmnotcovered{gclass1}@*));    -- breaks precondition (user not logged in)
       
  );
  
- -- Test add training plan
+ 
+ 
+ /*** USE CASE SCENARIO R05 - professor can create a training plan for a member      
+    USE CASE SCENARIO R03 - user can access training plan
+       USE CASE SCENARIO R06 - create exercises
+       USE CASE SCENARIO R07 - add or remove exercises from plan ***/
+ 
 (*@
-\label{testAddTrainingPlan:373}
+\label{testAddTrainingPlan:400}
 @*)
+ -- Test add training plan
  public testAddTrainingPlan: () ==> ()
  testAddTrainingPlan() == (
   
@@ -457,42 +485,42 @@ operations
   
  );
  
- -- Test add training plan
 (*@
-\label{testPermissions:406}
+\label{testPermissions:433}
 @*)
+ -- Test add training plan
  public testPermissions: () ==> ()
  testPermissions() == (*@\vdmnotcovered{(}@*)
   
   dcl gym:PerfectGym := (*@\vdmnotcovered{newGym}@*)();
-  dcl prof:Professor := (*@\vdmnotcovered{new}@*) TestUser().(*@\vdmnotcovered{newProfessor}@*)();  
-  dcl user:Member := new TestUser().(*@\vdmnotcovered{newMember}@*)(); 
-   dcl user2:Member := (*@\vdmnotcovered{new}@*) (*@\vdmnotcovered{TestUser}@*)().(*@\vdmnotcovered{newMember}@*)(); 
+  dcl prof:Professor := new TestUser().(*@\vdmnotcovered{newProfessor}@*)();  
+  dcl user:Member := (*@\vdmnotcovered{new}@*) (*@\vdmnotcovered{TestUser}@*)().(*@\vdmnotcovered{newMember}@*)(); 
+   dcl user2:Member := new (*@\vdmnotcovered{TestUser}@*)().(*@\vdmnotcovered{newMember}@*)(); 
    
-  dcl exercise1:Exercise:= (*@\vdmnotcovered{new}@*) Exercise(4, 10, (*@\vdmnotcovered{<Leg>}@*), (*@\vdmnotcovered{"leg workout"}@*));
-  dcl exercise2:Exercise:= new (*@\vdmnotcovered{Exercise}@*)(2, 15, <Arm>, (*@\vdmnotcovered{"arm workout"}@*));
-  dcl plan:Plan := new Plan([exercise1, (*@\vdmnotcovered{exercise2}@*)], (*@\vdmnotcovered{prof}@*));
+  dcl exercise1:Exercise:= new Exercise(4, 10, <Leg>, (*@\vdmnotcovered{"leg workout"}@*));
+  dcl exercise2:Exercise:= new Exercise((*@\vdmnotcovered{2}@*), 15, (*@\vdmnotcovered{<Arm>}@*), (*@\vdmnotcovered{"arm workout"}@*));
+  dcl plan:Plan := new Plan([exercise1, exercise2], (*@\vdmnotcovered{prof}@*));
   
-  (*@\vdmnotcovered{assertTrue}@*)( gym.addUser((*@\vdmnotcovered{user}@*)));
-  (*@\vdmnotcovered{assertTrue}@*)( gym.addUser((*@\vdmnotcovered{user2}@*)));
-  (*@\vdmnotcovered{assertTrue}@*)( gym.addUser((*@\vdmnotcovered{prof}@*)));
+  (*@\vdmnotcovered{assertTrue}@*)( gym.(*@\vdmnotcovered{addUser}@*)((*@\vdmnotcovered{user}@*)));
+  assertTrue( gym.addUser((*@\vdmnotcovered{user2}@*)));
+  (*@\vdmnotcovered{assertTrue}@*)( gym.(*@\vdmnotcovered{addUser}@*)((*@\vdmnotcovered{prof}@*)));
   
   -- user login
-  (*@\vdmnotcovered{assertEqual}@*)( (*@\vdmnotcovered{gym}@*).getLoggedUser(), (*@\vdmnotcovered{nil}@*)); 
-   (*@\vdmnotcovered{assertEqual}@*)( gym.loginMember(user.getNumber(), (*@\vdmnotcovered{user}@*).(*@\vdmnotcovered{getPassword}@*)()), (*@\vdmnotcovered{true}@*));
-   (*@\vdmnotcovered{assertEqual}@*)( gym.getLoggedUser(), (*@\vdmnotcovered{user}@*));
+  assertEqual( gym.getLoggedUser(), (*@\vdmnotcovered{nil}@*)); 
+   assertEqual( (*@\vdmnotcovered{gym}@*).(*@\vdmnotcovered{loginMember}@*)(user.getNumber(), user.getPassword()), (*@\vdmnotcovered{true}@*));
+   assertEqual( gym.getLoggedUser(), (*@\vdmnotcovered{user}@*));
   
   -- add that training plan to the user
-  gym.createTrainingPlan((*@\vdmnotcovered{prof}@*), (*@\vdmnotcovered{user}@*), (*@\vdmnotcovered{plan}@*)); --breaks precondition
+  (*@\vdmnotcovered{gym}@*).createTrainingPlan(prof, (*@\vdmnotcovered{user}@*), (*@\vdmnotcovered{plan}@*)); --breaks precondition
   
-   (*@\vdmnotcovered{assertEqual}@*)(gym.getPlan((*@\vdmnotcovered{user}@*)), (*@\vdmnotcovered{nil}@*));
-   (*@\vdmnotcovered{assertEqual}@*)(gym.(*@\vdmnotcovered{getPlan}@*)((*@\vdmnotcovered{user2}@*)), (*@\vdmnotcovered{nil}@*)); --breaks precondition (cant see other members plan)
+   (*@\vdmnotcovered{assertEqual}@*)(gym.getPlan(user), (*@\vdmnotcovered{nil}@*));
+   assertEqual(gym.getPlan(user2), (*@\vdmnotcovered{nil}@*)); --breaks precondition (cant see other members plan)
   
  );
-  
 (*@
-\label{test:435}
+\label{test:462}
 @*)
+  
  public test: () ==> ()
  test() == (
     
@@ -527,48 +555,48 @@ end TestPerfectGym
 Function or operation & Line & Coverage & Calls \\
 \hline
 \hline
-\hyperref[addGymClass:107]{addGymClass} & 107&100.0\% & 3 \\
+\hyperref[addGymClass:115]{addGymClass} & 115&100.0\% & 2 \\
 \hline
-\hyperref[addGymClassSameName:126]{addGymClassSameName} & 126&0.0\% & 0 \\
+\hyperref[addGymClassSameName:135]{addGymClassSameName} & 135&0.0\% & 0 \\
 \hline
-\hyperref[addRepeatedUser:85]{addRepeatedUser} & 85&100.0\% & 3 \\
+\hyperref[addRepeatedUser:92]{addRepeatedUser} & 92&100.0\% & 2 \\
 \hline
-\hyperref[addUser:19]{addUser} & 19&100.0\% & 9 \\
+\hyperref[addUser:20]{addUser} & 20&100.0\% & 5 \\
 \hline
-\hyperref[addUserReferral:58]{addUserReferral} & 58&100.0\% & 3 \\
+\hyperref[addUserReferral:65]{addUserReferral} & 65&100.0\% & 2 \\
 \hline
 \hyperref[createGym:11]{createGym} & 11&100.0\% & 3 \\
 \hline
-\hyperref[editUser:33]{editUser} & 33&100.0\% & 3 \\
+\hyperref[editUser:37]{editUser} & 37&100.0\% & 6 \\
 \hline
-\hyperref[gymClassesTimeOverlap:210]{gymClassesTimeOverlap} & 210&0.0\% & 0 \\
+\hyperref[gymClassesTimeOverlap:223]{gymClassesTimeOverlap} & 223&0.0\% & 0 \\
 \hline
 \hyperref[newGym:5]{newGym} & 5&100.0\% & 42 \\
 \hline
-\hyperref[test:435]{test} & 435&100.0\% & 3 \\
+\hyperref[test:462]{test} & 462&100.0\% & 1 \\
 \hline
-\hyperref[testAddGymClasses:263]{testAddGymClasses} & 263&100.0\% & 3 \\
+\hyperref[testAddGymClasses:281]{testAddGymClasses} & 281&100.0\% & 1 \\
 \hline
-\hyperref[testAddTrainingPlan:373]{testAddTrainingPlan} & 373&100.0\% & 3 \\
+\hyperref[testAddTrainingPlan:400]{testAddTrainingPlan} & 400&100.0\% & 3 \\
 \hline
-\hyperref[testFailEnrollGymClass:344]{testFailEnrollGymClass} & 344&0.0\% & 0 \\
+\hyperref[testFailEnrollGymClass:364]{testFailEnrollGymClass} & 364&0.0\% & 0 \\
 \hline
-\hyperref[testFailedLogin:244]{testFailedLogin} & 244&100.0\% & 3 \\
+\hyperref[testFailedLogin:258]{testFailedLogin} & 258&100.0\% & 3 \\
 \hline
-\hyperref[testGymClasses:144]{testGymClasses} & 144&100.0\% & 9 \\
+\hyperref[testGymClasses:153]{testGymClasses} & 153&100.0\% & 3 \\
 \hline
-\hyperref[testGymSchedule:163]{testGymSchedule} & 163&100.0\% & 3 \\
+\hyperref[testGymSchedule:176]{testGymSchedule} & 176&100.0\% & 1 \\
 \hline
-\hyperref[testLogin:228]{testLogin} & 228&100.0\% & 3 \\
+\hyperref[testLogin:242]{testLogin} & 242&100.0\% & 1 \\
 \hline
-\hyperref[testPermissions:406]{testPermissions} & 406&0.0\% & 0 \\
+\hyperref[testPermissions:433]{testPermissions} & 433&0.0\% & 0 \\
 \hline
-\hyperref[testProfessorClasses:327]{testProfessorClasses} & 327&100.0\% & 3 \\
+\hyperref[testProfessorClasses:347]{testProfessorClasses} & 347&100.0\% & 1 \\
 \hline
-\hyperref[testRemoveGymClasses:290]{testRemoveGymClasses} & 290&100.0\% & 3 \\
+\hyperref[testRemoveGymClasses:309]{testRemoveGymClasses} & 309&100.0\% & 1 \\
 \hline
 \hline
-TestPerfectGym.vdmpp & & 79.6\% & 99 \\
+TestPerfectGym.vdmpp & & 79.9\% & 77 \\
 \hline
 \end{longtable}
 
